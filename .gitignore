@@ -1,0 +1,13 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Runtime data (rate-limit counters, backups, sqlite, etc.)
+/data/ratelimit/
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+

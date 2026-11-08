@@ -1,0 +1,45 @@
+# ===================================================================
+# BloodLink — Apache hardening + routing
+# ===================================================================
+
+# --- Do not reveal a directory listing when no index file exists ---
+Options -Indexes
+
+# --- Do not advertise hidden dot files, env files, and git repositories ---
+<FilesMatch "^\.|\.env.*|\.git.*">
+    Require all denied
+</FilesMatch>
+
+# --- Block direct web access to source, schema, and internal folders ---
+RewriteEngine On
+RewriteRule ^(php|database|backend|data|test|docs|flowcharts)(/|$) - [F,L]
+
+# --- Block risky file types from being served as static files ---
+<FilesMatch "\.(env|sql|md|json|lock|log|ini|sh|bak|inc|yml|yaml|py|dist)$">
+    Require all denied
+</FilesMatch>
+
+# --- Fallback security headers (also set in PHP; harmless if duplicated) ---
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- Hide the PHP version banner ---
+<IfModule mod_headers.c>
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+</IfModule>
+
+# ===================================================================
+# Routing (unchanged behaviour)
+# ===================================================================
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+RewriteRule ^api/(.*)$ api/index.php [QSA,L]
+RewriteRule ^(css|js|images|download|downloads|uploads)/(.*)$ public/$1/$2 [L]
+RewriteRule ^favicon\.ico$ public/favicon.ico [L]
+RewriteRule ^(index|dashboard|donations|donors|donate|history|inventory|locations|login|logs|map|notifications|patients|profile|register|reports|requests|role-permissions|search|settings|users|verify-email|forgot-password|official_blood_request_form|download|announcements|app-updates|feedbacks|view_doc)\.php$ public/$1.php [L]
+DirectoryIndex index.php

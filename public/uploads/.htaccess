@@ -1,0 +1,32 @@
+# Apache configuration to protect uploaded media and documents
+# Deny execution of server-side scripts to prevent Webshell/RCE attacks
+
+# 1. Deny execution of executable extensions
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|php8|phps|phar|exe|pl|py|cgi|asp|aspx|sh|bash|bat|cmd)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# 2. Disable PHP execution engine if mod_php is present
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# 3. Disable CGI script execution & directory listing
+Options -ExecCGI -Indexes
+
+# 4. Remove file type handlers
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .phar
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phps .phar
+
+# 5. Security headers for static uploads
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+</IfModule>
