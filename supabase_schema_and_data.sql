@@ -618,5 +618,3 @@ SELECT setval(pg_get_serial_sequence('app_versions', 'id'), COALESCE(max(id), 1)
 SELECT setval(pg_get_serial_sequence('notifications', 'id'), COALESCE(max(id), 1)) FROM "notifications";
 SELECT setval(pg_get_serial_sequence('activity_logs', 'id'), COALESCE(max(id), 1)) FROM "activity_logs";
 SELECT setval(pg_get_serial_sequence('email_verification_otps', 'id'), COALESCE(max(id), 1)) FROM "email_verification_otps";
-SELECT setval(pg_get_serial_sequence('permissions', 'id'), COALESCE(max(id), 1)) FROM "permissions";
-SELECT setval(pg_get_serial_sequence('settings', 'id'), COALESCE(max(id), 1)) FROM "settings";
