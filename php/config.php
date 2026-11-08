@@ -6,6 +6,7 @@ loadEnv();
 
 // Credentials come from .env; the XAMPP defaults keep the app working
 // out of the box if .env is absent. Nothing secret is hardcoded here.
+define('DB_DRIVER', (string) env('DB_DRIVER', 'mysql'));
 define('DB_HOST', env('DB_HOST', 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com'));
 define('DB_PORT', env('DB_PORT', '4000'));
 define('DB_NAME', env('DB_NAME', 'bloodlink_app'));

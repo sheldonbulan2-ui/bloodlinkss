@@ -6,10 +6,18 @@ function db(bool $withDatabase = true): PDO
     static $connections = [];
     $key = $withDatabase ? 'database' : 'server';
     if (isset($connections[$key])) return $connections[$key];
-    $portStr = (defined('DB_PORT') && DB_PORT !== '' && DB_PORT !== '3306') ? ';port=' . DB_PORT : '';
-    $dsn = $withDatabase
-        ? 'mysql:host=' . DB_HOST . $portStr . ';dbname=' . DB_NAME . ';charset=utf8mb4'
-        : 'mysql:host=' . DB_HOST . $portStr . ';charset=utf8mb4';
+    $driver = defined('DB_DRIVER') ? strtolower(trim((string) DB_DRIVER)) : 'mysql';
+    $isPg = in_array($driver, ['pgsql', 'postgres', 'postgresql', 'supabase'], true);
+    if ($isPg) {
+        $portStr = (defined('DB_PORT') && DB_PORT !== '') ? ';port=' . DB_PORT : ';port=5432';
+        $sslMode = (defined('DB_SSL') && (DB_SSL === true || DB_SSL === 'true' || DB_SSL === '1')) ? ';sslmode=require' : '';
+        $dsn = 'pgsql:host=' . DB_HOST . $portStr . ';dbname=' . DB_NAME . $sslMode;
+    } else {
+        $portStr = (defined('DB_PORT') && DB_PORT !== '' && DB_PORT !== '3306') ? ';port=' . DB_PORT : '';
+        $dsn = $withDatabase
+            ? 'mysql:host=' . DB_HOST . $portStr . ';dbname=' . DB_NAME . ';charset=utf8mb4'
+            : 'mysql:host=' . DB_HOST . $portStr . ';charset=utf8mb4';
+    }
     try {
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

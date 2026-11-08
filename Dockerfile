@@ -1,13 +1,13 @@
 FROM php:8.2-apache
 
-# Install CA certificates for secure cloud database TLS/SSL & enable Apache mod_rewrite
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
+# Install CA certificates, libpq for Supabase (PostgreSQL) & enable Apache mod_rewrite
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates libpq-dev \
     && update-ca-certificates \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PDO MySQL driver
-RUN docker-php-ext-install pdo pdo_mysql
+# Install PDO MySQL & PostgreSQL drivers (Universal TiDB & Supabase support)
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
 # Set working directory
 WORKDIR /var/www/html
