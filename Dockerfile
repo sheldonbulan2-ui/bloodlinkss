@@ -20,7 +20,11 @@ RUN mkdir -p /var/www/html/public/uploads \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/public/uploads
 
-# Expose standard web port
-EXPOSE 80
+# Suppress ServerName warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-CMD ["apache2-foreground"]
+# Expose standard web port and Render dynamic port
+EXPOSE 80 10000
+
+# Dynamically bind Apache to Render's dynamic $PORT (defaults to 80 if not set)
+CMD ["sh", "-c", "sed -i \"s/80/${PORT:-80}/g\" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && apache2-foreground"]
