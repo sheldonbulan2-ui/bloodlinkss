@@ -39,7 +39,7 @@ if ($first === 'latest' && $method === 'GET') {
         $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
                   (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
                   ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'bloodlink-q334.onrender.com';
+        $host = $_SERVER['HTTP_HOST'] ?? 'bloodlinkss.onrender.com';
         $apkUrl = $scheme . '://' . $host . '/' . ltrim($apkUrl, '/');
     }
 

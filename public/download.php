@@ -1,6 +1,6 @@
 <?php
 if (isset($_GET['dl']) || (isset($_GET['action']) && $_GET['action'] === 'download')) {
-    $apkPath = __DIR__ . '/download/Bloodlink_apk v1.0.apk';
+    $apkPath = __DIR__ . '/download/Bloodlink_v1.0.8.apk';
     if (!file_exists($apkPath)) {
         $apkPath = __DIR__ . '/download/Bloodlink_apk_v1.0.apk';
     }
@@ -24,7 +24,7 @@ publicPage();
 
 // Calculate base domain for QR codes
 $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'] ?? 'bloodlink-q334.onrender.com';
+$host = $_SERVER['HTTP_HOST'] ?? 'bloodlinkss.onrender.com';
 $baseUrl = $scheme . '://' . $host;
 $androidTargetUrl = $baseUrl . '/public/download.php?dl=1';
 ?>
