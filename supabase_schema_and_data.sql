@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "users" (
     "password_hash" varchar(255) NOT NULL,
     "role" VARCHAR(100) NOT NULL,
     "status" VARCHAR(100) NOT NULL DEFAULT 'active',
-    "email_verified" BOOLEAN NOT NULL DEFAULT TRUE,
+    "email_verified" SMALLINT NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "profile_image" varchar(500),
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS "blood_fee_schedule" (
     "total_fee" decimal(10,2) NOT NULL,
     "legal_basis" varchar(255) DEFAULT 'DOH AO No. 2015-0045 / R.A. 7719 (National Voluntary Blood Services Act)',
     "notes" TEXT,
-    "is_active" BOOLEAN NOT NULL DEFAULT TRUE,
+    "is_active" SMALLINT NOT NULL DEFAULT 1,
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -232,7 +232,7 @@ CREATE TABLE IF NOT EXISTS "blood_requests" (
     "correction_notes" TEXT,
     "final_status" varchar(64) NOT NULL DEFAULT 'Pending',
     "staff_signature_id" varchar(80),
-    "inventory_deducted" BOOLEAN NOT NULL DEFAULT FALSE,
+    "inventory_deducted" SMALLINT NOT NULL DEFAULT 0,
     "rejection_reason" varchar(255),
     "approved_at" TIMESTAMP,
     "processed_by" INTEGER,
@@ -284,7 +284,7 @@ CREATE TABLE IF NOT EXISTS "donor_screenings" (
     "hemoglobin_level" decimal(4,1),
     "blood_pressure" varchar(20),
     "pulse_rate" INTEGER,
-    "passed_screening" BOOLEAN NOT NULL DEFAULT FALSE,
+    "passed_screening" SMALLINT NOT NULL DEFAULT 0,
     "deferral_reason" varchar(255),
     "deferral_until" DATE,
     "screening_answers" TEXT,
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS "announcements" (
     "message" TEXT NOT NULL,
     "category" varchar(60) NOT NULL DEFAULT 'General',
     "target_audience" varchar(30) NOT NULL DEFAULT 'all',
-    "is_urgent" BOOLEAN NOT NULL DEFAULT FALSE,
+    "is_urgent" SMALLINT NOT NULL DEFAULT 0,
     "hospital_id" INTEGER,
     "hospital_name" varchar(160),
     "created_by" INTEGER NOT NULL,
@@ -338,8 +338,8 @@ CREATE TABLE IF NOT EXISTS "app_versions" (
     "release_notes" TEXT NOT NULL,
     "apk_file_url" varchar(255) NOT NULL,
     "file_size_bytes" BIGINT DEFAULT '0',
-    "is_mandatory" BOOLEAN DEFAULT FALSE,
-    "is_active" BOOLEAN DEFAULT TRUE,
+    "is_mandatory" SMALLINT DEFAULT 0,
+    "is_active" SMALLINT DEFAULT 1,
     "uploaded_by" INTEGER,
     "uploaded_by_name" varchar(120),
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -566,7 +566,7 @@ INSERT INTO "email_verification_otps" ("id", "user_id", "email", "otp_hash", "ex
 CREATE TABLE IF NOT EXISTS "permissions" (
     "role" VARCHAR(100) NOT NULL,
     "module" varchar(40) NOT NULL,
-    "can_access" BOOLEAN NOT NULL DEFAULT FALSE
+    "can_access" SMALLINT NOT NULL DEFAULT 0
 );
 
 -- Seed data for permissions (20 rows)
@@ -599,3 +599,24 @@ CREATE TABLE IF NOT EXISTS "settings" (
     "setting_value" varchar(255) NOT NULL
 );
 
+
+-- ------------------------------------------------------------------
+-- Reset Sequences for SERIAL columns
+-- ------------------------------------------------------------------
+SELECT setval(pg_get_serial_sequence('users', 'id'), COALESCE(max(id), 1)) FROM "users";
+SELECT setval(pg_get_serial_sequence('patients', 'id'), COALESCE(max(id), 1)) FROM "patients";
+SELECT setval(pg_get_serial_sequence('donors', 'id'), COALESCE(max(id), 1)) FROM "donors";
+SELECT setval(pg_get_serial_sequence('blood_locations', 'id'), COALESCE(max(id), 1)) FROM "blood_locations";
+SELECT setval(pg_get_serial_sequence('blood_inventory', 'id'), COALESCE(max(id), 1)) FROM "blood_inventory";
+SELECT setval(pg_get_serial_sequence('blood_fee_schedule', 'id'), COALESCE(max(id), 1)) FROM "blood_fee_schedule";
+SELECT setval(pg_get_serial_sequence('blood_requests', 'id'), COALESCE(max(id), 1)) FROM "blood_requests";
+SELECT setval(pg_get_serial_sequence('donations', 'id'), COALESCE(max(id), 1)) FROM "donations";
+SELECT setval(pg_get_serial_sequence('donor_screenings', 'id'), COALESCE(max(id), 1)) FROM "donor_screenings";
+SELECT setval(pg_get_serial_sequence('feedbacks', 'id'), COALESCE(max(id), 1)) FROM "feedbacks";
+SELECT setval(pg_get_serial_sequence('announcements', 'id'), COALESCE(max(id), 1)) FROM "announcements";
+SELECT setval(pg_get_serial_sequence('app_versions', 'id'), COALESCE(max(id), 1)) FROM "app_versions";
+SELECT setval(pg_get_serial_sequence('notifications', 'id'), COALESCE(max(id), 1)) FROM "notifications";
+SELECT setval(pg_get_serial_sequence('activity_logs', 'id'), COALESCE(max(id), 1)) FROM "activity_logs";
+SELECT setval(pg_get_serial_sequence('email_verification_otps', 'id'), COALESCE(max(id), 1)) FROM "email_verification_otps";
+SELECT setval(pg_get_serial_sequence('permissions', 'id'), COALESCE(max(id), 1)) FROM "permissions";
+SELECT setval(pg_get_serial_sequence('settings', 'id'), COALESCE(max(id), 1)) FROM "settings";
