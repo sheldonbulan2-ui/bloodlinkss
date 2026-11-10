@@ -120,7 +120,7 @@
     document.getElementById('don-table').innerHTML = UI.table(
       ['ID', 'Date', 'Donor', 'Blood', 'Units', 'Location', 'Status', 'Recorded By', 'Actions'],
       data.donations.map(d => `<tr>
-        <td>#${d.id}</td><td>${UI.fmtDate(d.donation_date)}</td>
+        <td><span style="font-family:monospace; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">${UI.esc(UI.fmtDonationId(d.id, d.donation_code))}</span></td><td>${UI.fmtDate(d.donation_date)}</td>
         <td>${UI.esc(d.donor_code)} — ${UI.esc(d.last_name)}, ${UI.esc(d.first_name)}</td>
         <td>${UI.bloodChip(d.blood_type)}</td><td>${d.blood_units}</td>
         <td class="small">${UI.esc(d.donation_location)}</td>

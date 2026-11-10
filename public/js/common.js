@@ -82,6 +82,28 @@ const UI = {
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   },
 
+  /* ---- ID Formatters ---- */
+  fmtUserId(id) {
+    if (!id) return '-';
+    return 'USR-' + String(id).padStart(4, '0');
+  },
+  fmtReqId(id, ref) {
+    if (ref && String(ref).trim()) return ref;
+    return 'REQ-2026-' + String(id || 0).padStart(4, '0');
+  },
+  fmtPatientCode(id, code) {
+    if (code && String(code).trim()) return code;
+    return 'PAT-' + String(id || 0).padStart(4, '0');
+  },
+  fmtDonorCode(id, code) {
+    if (code && String(code).trim()) return code;
+    return 'DON-' + String(id || 0).padStart(4, '0');
+  },
+  fmtDonationId(id, ref) {
+    if (ref && String(ref).trim()) return ref;
+    return 'DON-' + String(id || 0).padStart(4, '0');
+  },
+
   /* ---- formatting ---- */
   fmtDate(d) {
     if (!d) return '-';

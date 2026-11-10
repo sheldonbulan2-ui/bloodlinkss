@@ -741,7 +741,7 @@ if ($action === 'check_status') {
 
 // 3. GET APPROVED REQUESTS (For Donor Screen in Android App)
 if ($action === 'get_approved_requests') {
-    $stmt = $pdo->query("SELECT id, patient_name, blood_type, units_needed, priority, reason, location, contact_number, status, medical_document_url, created_at FROM blood_requests WHERE status = 'Approved' ORDER BY id DESC");
+    $stmt = $pdo->query("SELECT * FROM blood_requests WHERE status = 'Approved' ORDER BY id DESC");
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode(["success" => true, "requests" => $requests]);
     exit;
@@ -766,11 +766,11 @@ if ($action === 'get_patient_requests') {
     }
 
     if ($patientId) {
-        $stmt = $pdo->prepare("SELECT id, patient_name, blood_type, units_needed, priority, reason, location, contact_number, status, medical_document_url, created_at FROM blood_requests WHERE patient_id = ? ORDER BY id DESC");
+        $stmt = $pdo->prepare("SELECT * FROM blood_requests WHERE patient_id = ? ORDER BY id DESC");
         $stmt->execute([$patientId]);
         $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } elseif ($patientName !== '') {
-        $stmt = $pdo->prepare("SELECT id, patient_name, blood_type, units_needed, priority, reason, location, contact_number, status, medical_document_url, created_at FROM blood_requests WHERE patient_name LIKE ? ORDER BY id DESC");
+        $stmt = $pdo->prepare("SELECT * FROM blood_requests WHERE patient_name LIKE ? ORDER BY id DESC");
         $stmt->execute(['%' . $patientName . '%']);
         $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
@@ -1183,7 +1183,7 @@ if ($action === 'clear_test_data' || $action === 'reset_records') {
 
 // 6. GET ALL REQUESTS (For the Web PoC Live Monitor)
 if ($method === 'GET' && ($action === '' || $action === 'get_requests' || $action === 'requests')) {
-    $stmt = $pdo->query("SELECT id, patient_name, blood_type, units_needed, priority, reason, location, contact_number, status, medical_document_url, created_at FROM blood_requests ORDER BY id DESC LIMIT 30");
+    $stmt = $pdo->query("SELECT * FROM blood_requests ORDER BY id DESC LIMIT 50");
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode(["success" => true, "requests" => $requests]);
     exit;

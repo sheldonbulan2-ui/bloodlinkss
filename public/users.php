@@ -223,7 +223,7 @@
           const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || u.username;
           return `
             <tr>
-              <td>#${u.id}</td>
+              <td><span style="font-family:monospace; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">${UI.fmtUserId(u.id)}</span></td>
               <td><b>${UI.esc(fullName)}</b><br><span class="muted small">@${UI.esc(u.username)}</span></td>
               <td class="small muted">${UI.esc(u.contact_number || u.email || '—')}</td>
               <td><span class="chip" style="font-weight:800; color:#b91c1c;">${UI.esc(u.blood_type || '—')}</span></td>
@@ -276,7 +276,7 @@
         const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || u.username;
         return `
           <tr>
-            <td>#${u.id}</td>
+            <td><span style="font-family:monospace; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">${UI.fmtUserId(u.id)}</span></td>
             <td><b>${UI.esc(fullName)}</b><br><span class="muted small">@${UI.esc(u.username)}</span></td>
             <td class="small muted">${UI.esc(u.contact_number || u.email || '—')}</td>
             <td><span class="chip" style="font-weight:800; color:#b91c1c;">${UI.esc(u.blood_type || '—')}</span></td>

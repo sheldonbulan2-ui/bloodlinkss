@@ -459,7 +459,7 @@
                            `<span class="badge-doc-pending">⏳ Pending Review</span>`;
 
           return `<tr>
-            <td><b>${UI.esc(r.request_ref_no || ('#' + r.id))}</b></td>
+            <td><span style="font-family:monospace; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">${UI.esc(UI.fmtReqId(r.id, r.request_ref_no))}</span></td>
             <td>${UI.fmtDate(r.request_date)}</td>
             <td><b>${UI.esc(r.patient_name || '-')}</b><br><small class="muted">${UI.esc(r.hospital_department || r.ward_room || '')}</small></td>
             <td>${UI.bloodChip(r.blood_type)}<br><small class="muted">${UI.esc(r.component_type || 'Whole Blood')}</small></td>
@@ -647,7 +647,7 @@
           const patName = r.patient_name || (r.first_name + ' ' + r.last_name);
 
           return `<tr>
-            <td><b>${UI.esc(r.request_ref_no || ('#' + r.id))}</b></td>
+            <td><span style="font-family:monospace; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">${UI.esc(UI.fmtReqId(r.id, r.request_ref_no))}</span></td>
             <td>${UI.fmtDate(r.request_date)}</td>
             <td>
               <a href="javascript:void(0)" onclick="openSectionFModal(${r.id})" style="color:#1e40af; font-weight:700; text-decoration:none;">
