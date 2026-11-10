@@ -64,10 +64,12 @@
 <script src="js/shell.js?v=5"></script>
 <script>
 (async () => {
-  const isSuper = Shell.role === 'superadmin';
-  const pageTitle = isSuper ? 'Registered Admin & Staff by Hospital' : 'Official Hospital Staff';
-  const ok = await Shell.init({ title: pageTitle, active: 'users' });
+  const ok = await Shell.init({ title: 'User Management', active: 'users' });
   if (!ok) return;
+
+  const isSuper = (Shell.role === 'superadmin');
+  const pageTitle = isSuper ? 'Registered Patients & Donors (Organized by Hospital)' : 'Official Hospital Staff';
+  document.title = pageTitle + ' - BloodLink';
 
   if (!['admin', 'superadmin'].includes(Shell.role)) {
     Shell.page().innerHTML = '<div class="empty"><b>Access denied.</b> You do not have permission to view this page.</div>';

@@ -24,7 +24,7 @@
   const matrix = { staff: {} };
   for (const r of data.staff_only) matrix.staff[r.module] = !!r.can_access;
 
-  const db = (await API.get('/api/admin/users')).users;
+  const db = data.staff_admin_users || [];
   page.innerHTML = `
     <div class="grid cols-2">
       <div class="card">

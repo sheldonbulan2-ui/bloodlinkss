@@ -57,6 +57,12 @@ if ($action === 'map' && $method === 'GET') {
     jsonResponse(['ok' => true, 'locations' => groupAvailability(getAvailability())]);
 }
 
+/* ---------------------------------------------------- locations */
+if ($action === 'locations' && $method === 'GET') {
+    $rows = db()->query("SELECT id, location_name, address, latitude, longitude, contact_number, available_status FROM blood_locations WHERE available_status = 'Active' ORDER BY location_name ASC")->fetchAll();
+    jsonResponse(['ok' => true, 'locations' => $rows]);
+}
+
 /* ---------------------------------------------------- fee transparency */
 if ($action === 'fees' && $method === 'GET') {
     $fees = db()->query("SELECT * FROM blood_fee_schedule WHERE is_active = 1 ORDER BY total_fee DESC")->fetchAll();

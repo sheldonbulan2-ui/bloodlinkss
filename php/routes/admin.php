@@ -249,8 +249,22 @@ if ($action === 'permissions') {
                 if ($rowRole === 'staff') $staffRows[] = $entry; else $adminRows[] = $entry;
             }
         }
-        jsonResponse(['ok' => true, 'modules' => $modules,
-            'staff_only' => $staffRows, 'admin' => $adminRows]);
+        $staffAdminUsers = $database->query(
+            "SELECT u.id, u.username, u.email, u.role, u.status,
+                    COALESCE(l.location_name, 'San Mariano District Hospital') AS hospital_name
+               FROM users u
+          LEFT JOIN blood_locations l ON l.id = u.hospital_id
+              WHERE u.role IN ('staff', 'admin', 'superadmin')
+              ORDER BY u.role ASC, u.username ASC"
+        )->fetchAll();
+
+        jsonResponse([
+            'ok' => true,
+            'modules' => $modules,
+            'staff_only' => $staffRows,
+            'admin' => $adminRows,
+            'staff_admin_users' => $staffAdminUsers
+        ]);
     }
 
     if ($method === 'PUT') {
