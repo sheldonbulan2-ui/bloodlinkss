@@ -12,22 +12,22 @@
  * Every module file returns JSON through jsonResponse() and exits.
  */
 declare(strict_types=1);
-define('BL_API', true);
-
+ob_start();
 ini_set('display_errors', '0');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+define('BL_API', true);
+
 register_shutdown_function(function() {
     $err = error_get_last();
     if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        if (ob_get_length()) ob_clean();
         if (!headers_sent()) {
             http_response_code(500);
             header("Content-Type: application/json; charset=UTF-8");
         }
-        if (ob_get_length()) ob_clean();
-        echo json_encode(["ok" => false, "message" => "Server error: " . $err['message']]);
+        echo json_encode(["ok" => false, "message" => "Server temporarily unavailable. Please try again shortly."]);
     }
 });
-ob_start();
 
 require_once __DIR__ . '/../php/db.php';
 require_once __DIR__ . '/../php/helpers.php';

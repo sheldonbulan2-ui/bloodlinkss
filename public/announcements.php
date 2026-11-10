@@ -461,8 +461,9 @@
             body: fd
           });
           const uploadJson = await uploadRes.json();
-          if (uploadJson && uploadJson.success && uploadJson.file_url) {
-            finalMessage += '\n\n📎 Official Flyer / Attachment: ' + uploadJson.file_url;
+          const uploadedUrl = (uploadJson && (uploadJson.file_url || uploadJson.url || uploadJson.profile_image)) || '';
+          if (uploadJson && uploadJson.success && uploadedUrl) {
+            finalMessage += '\n\n📎 Official Flyer / Attachment: ' + uploadedUrl;
           }
         } catch (uploadErr) {
           console.warn('Attachment upload failed:', uploadErr);

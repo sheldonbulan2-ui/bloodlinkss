@@ -1,24 +1,24 @@
 <?php
+ob_start();
+ini_set('display_errors', '0');
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 /**
  * BloodLink Phase 1 - Local PoC Ping-Pong API Bridge
  * ---------------------------------------------------
  * Bridges the Android App with the Web Portal locally.
  */
 if (!defined('BL_API')) define('BL_API', true);
-ini_set('display_errors', '0');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 register_shutdown_function(function() {
     $err = error_get_last();
     if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        if (ob_get_length()) ob_clean();
         if (!headers_sent()) {
             http_response_code(500);
             header("Content-Type: application/json; charset=UTF-8");
         }
-        if (ob_get_length()) ob_clean();
-        echo json_encode(["success" => false, "message" => "Server temporarily unavailable: " . $err['message']]);
+        echo json_encode(["success" => false, "message" => "Server temporarily unavailable. Please try again shortly."]);
     }
 });
-ob_start();
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
@@ -805,17 +805,21 @@ if ($action === 'donate') {
     $donorId = $dStmt->fetchColumn();
 
     if ($donorId) {
-        $cooldownStmt = $pdo->prepare("SELECT id, donation_date, DATEDIFF(NOW(), donation_date) AS days_passed FROM donations WHERE donor_id = ? AND status = 'Completed' ORDER BY id DESC LIMIT 1");
+        $cooldownStmt = $pdo->prepare("SELECT id, donation_date FROM donations WHERE donor_id = ? AND status = 'Completed' ORDER BY id DESC LIMIT 1");
         $cooldownStmt->execute([$donorId]);
         $lastDon = $cooldownStmt->fetch(PDO::FETCH_ASSOC);
-        if ($lastDon && (int)$lastDon['days_passed'] < 56) {
-            $rem = 56 - (int)$lastDon['days_passed'];
-            http_response_code(429);
-            echo json_encode([
-                "success" => false,
-                "message" => "Donation Cooldown Active: May natitira ka pang $rem araw sa iyong 3-month (90 days) cooldown bago muling mag-donate."
-            ]);
-            exit;
+        if ($lastDon && !empty($lastDon['donation_date'])) {
+            $donTs = strtotime((string)$lastDon['donation_date']);
+            $daysPassed = ($donTs !== false) ? (int) floor(max(0, time() - $donTs) / 86400) : 999;
+            if ($daysPassed < 56) {
+                $rem = 56 - $daysPassed;
+                http_response_code(429);
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Donation Cooldown Active: May natitira ka pang $rem araw sa iyong 3-month (90 days) cooldown bago muling mag-donate."
+                ]);
+                exit;
+            }
         }
     }
 

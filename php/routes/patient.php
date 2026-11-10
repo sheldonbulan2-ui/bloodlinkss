@@ -146,17 +146,21 @@ if ($action === 'requests' && $method === 'POST') {
     $priority = in_array((string) ($body['priority'] ?? ''), ['Normal', 'Urgent', 'Critical'], true)
         ? (string) $body['priority'] : ($urgencyLevel === 'Emergency' ? 'Critical' : ($urgencyLevel === 'Urgent' ? 'Urgent' : 'Normal'));
 
-    // 1. Anti-spam 30-Second Cooldown Check
-    $lastReqStmt = db()->prepare("SELECT created_at, TIMESTAMPDIFF(SECOND, created_at, NOW()) AS sec_diff FROM blood_requests WHERE patient_id = ? ORDER BY id DESC LIMIT 1");
+    // 1. Anti-spam 30-Second Cooldown Check (pure PHP timestamp calculation, 100% cross-engine safe)
+    $lastReqStmt = db()->prepare("SELECT created_at FROM blood_requests WHERE patient_id = ? ORDER BY id DESC LIMIT 1");
     $lastReqStmt->execute([$patient['id']]);
     $lastReq = $lastReqStmt->fetch();
-    if ($lastReq && isset($lastReq['sec_diff']) && (int)$lastReq['sec_diff'] < 30) {
-        $waitSec = 30 - (int)$lastReq['sec_diff'];
-        jsonResponse([
-            'ok' => false,
-            'message' => "Kailangan maghintay ng {$waitSec} segundo bago muling makapag-request ng dugo (Anti-spam cooldown).",
-            'cooldown_remaining' => $waitSec
-        ], 429);
+    if ($lastReq && !empty($lastReq['created_at'])) {
+        $createdTs = strtotime((string)$lastReq['created_at']);
+        $secDiff = ($createdTs !== false) ? max(0, time() - $createdTs) : 999;
+        if ($secDiff < 30) {
+            $waitSec = 30 - $secDiff;
+            jsonResponse([
+                'ok' => false,
+                'message' => "Kailangan maghintay ng {$waitSec} segundo bago muling makapag-request ng dugo (Anti-spam cooldown).",
+                'cooldown_remaining' => $waitSec
+            ], 429);
+        }
     }
 
     // 2. Daily Limit Check (Generous 100 requests per day for active testing & operations)

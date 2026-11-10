@@ -1,27 +1,26 @@
 <?php
+declare(strict_types=1);
+ob_start();
+ini_set('display_errors', '0');
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 /**
  * BloodLink Medical Prescription & Document Upload Service (Hardened)
  * -------------------------------------------------------------------
  * Handles file uploads from Android App and Web Portal with strict
  * MIME magic-byte verification, file extension matching, and IDOR protection.
  */
-declare(strict_types=1);
-
 if (!defined('BL_API')) define('BL_API', true);
-ini_set('display_errors', '0');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 register_shutdown_function(function() {
     $err = error_get_last();
     if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        if (ob_get_length()) ob_clean();
         if (!headers_sent()) {
             http_response_code(500);
             header("Content-Type: application/json; charset=UTF-8");
         }
-        if (ob_get_length()) ob_clean();
-        echo json_encode(["success" => false, "message" => "Upload server error: " . $err['message']]);
+        echo json_encode(["success" => false, "message" => "Upload server temporarily unavailable. Please try again shortly."]);
     }
 });
-ob_start();
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -125,7 +124,7 @@ if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
 $protocol = isHttps() ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $isSubdir = strpos($_SERVER['REQUEST_URI'] ?? '', 'webandapp_combine') !== false;
-$basePath = $isSubdir ? '/webandapp_combine/Bloodlinks_web2/public/uploads/' : '/public/uploads/';
+$basePath = $isSubdir ? '/webandapp_combine/bloodlink_web/public/uploads/' : '/public/uploads/';
 $fileUrl = $protocol . '://' . $host . $basePath . $newFileName;
 
 // Target linking parameters
@@ -194,6 +193,7 @@ echo json_encode([
     "message" => ($userId > 0 || in_array($fileKey, ['profile_image', 'avatar', 'image'])) ? "Profile image uploaded and updated successfully!" : "File uploaded successfully!",
     "file_name" => $newFileName,
     "url" => $fileUrl,
+    "file_url" => $fileUrl,
     "profile_image" => $fileUrl,
     "user_id" => $userId,
     "request_id" => $requestId

@@ -144,20 +144,18 @@ if ($action === 'donate' && $method === 'POST') {
         jsonResponse(['ok' => false, 'message' => 'You do not meet the minimum eligibility criteria to donate.'], 400);
     }
 
-    // Cooldown verification: 3 months (90 days) between completed donations
-    $cooldownStmt = db()->prepare("SELECT id, donation_date, created_at, reference_code,
-        DATEDIFF(CURDATE(), LEAST(donation_date, CURDATE())) AS days_passed,
-        TIMESTAMPDIFF(SECOND, created_at, NOW()) AS sec_passed
-        FROM donations WHERE donor_id = ? AND status = 'Completed' ORDER BY id DESC LIMIT 1");
+    // Cooldown verification: 3 months (90 days) between completed donations (pure PHP, cross-engine safe)
+    $cooldownStmt = db()->prepare("SELECT id, donation_date, created_at, reference_code FROM donations WHERE donor_id = ? AND status = 'Completed' ORDER BY id DESC LIMIT 1");
     $cooldownStmt->execute([$donor['id']]);
     $lastDonation = $cooldownStmt->fetch();
 
     $COOLDOWN_DAYS = 90; // 3 months donation interval
     if ($lastDonation) {
-        $daysPassed = max(0, (int) ($lastDonation['days_passed'] ?? 0));
+        $donTs = !empty($lastDonation['donation_date']) ? strtotime((string)$lastDonation['donation_date']) : (!empty($lastDonation['created_at']) ? strtotime((string)$lastDonation['created_at']) : 0);
+        $daysPassed = ($donTs > 0) ? (int) floor(max(0, time() - min($donTs, time())) / 86400) : 999;
         if ($daysPassed < $COOLDOWN_DAYS) {
             $daysRemaining = $COOLDOWN_DAYS - $daysPassed;
-            $effectiveDate = min(strtotime($lastDonation['donation_date']), time());
+            $effectiveDate = min($donTs, time());
             $nextDate = date('F j, Y', strtotime("+{$COOLDOWN_DAYS} days", $effectiveDate));
             $secRemaining = max(0, $daysRemaining * 86400);
 
@@ -255,11 +253,8 @@ if ($action === 'stats' && $method === 'GET') {
         $row['total_donations'] = (int) $row['total_donations'];
         $row['verified_units'] = (int) $row['verified_units'];
 
-        // Check active cooldown (strictly for Completed donations)
-        $cooldownStmt = db()->prepare("SELECT id, donation_date, created_at, reference_code,
-            DATEDIFF(CURDATE(), LEAST(donation_date, CURDATE())) AS days_passed,
-            TIMESTAMPDIFF(SECOND, created_at, NOW()) AS sec_passed
-            FROM donations WHERE donor_id = ? AND status = 'Completed' ORDER BY id DESC LIMIT 1");
+        // Check active cooldown (strictly for Completed donations) (pure PHP, cross-engine safe)
+        $cooldownStmt = db()->prepare("SELECT id, donation_date, created_at, reference_code FROM donations WHERE donor_id = ? AND status = 'Completed' ORDER BY id DESC LIMIT 1");
         $cooldownStmt->execute([$donor['id']]);
         $lastDonation = $cooldownStmt->fetch();
 
@@ -269,13 +264,15 @@ if ($action === 'stats' && $method === 'GET') {
         $row['days_remaining'] = 0;
         $row['next_eligible_date'] = '';
         if ($lastDonation) {
-            $daysPassed = max(0, (int) ($lastDonation['days_passed'] ?? 0));
+            $donTs = !empty($lastDonation['donation_date']) ? strtotime((string)$lastDonation['donation_date']) : (!empty($lastDonation['created_at']) ? strtotime((string)$lastDonation['created_at']) : 0);
+            $daysPassed = ($donTs > 0) ? (int) floor(max(0, time() - min($donTs, time())) / 86400) : 999;
             if ($daysPassed < $COOLDOWN_DAYS) {
                 $row['in_cooldown'] = true;
                 $row['days_remaining'] = $COOLDOWN_DAYS - $daysPassed;
-                $effectiveDate = min(strtotime($lastDonation['donation_date']), time());
+                $effectiveDate = min($donTs, time());
                 $row['next_eligible_date'] = date('F j, Y', strtotime("+{$COOLDOWN_DAYS} days", $effectiveDate));
-                $secRem = ($COOLDOWN_DAYS * 86400) - max(0, (int)$lastDonation['sec_passed']);
+                $secPassed = !empty($lastDonation['created_at']) ? max(0, time() - strtotime((string)$lastDonation['created_at'])) : ($daysPassed * 86400);
+                $secRem = ($COOLDOWN_DAYS * 86400) - $secPassed;
                 $row['cooldown_seconds'] = max(0, $secRem);
                 $row['last_donation_date'] = $lastDonation['donation_date'];
             }
