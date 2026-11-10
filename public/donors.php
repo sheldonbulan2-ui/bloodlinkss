@@ -69,9 +69,7 @@
         <td>${d.donation_count}</td><td>${d.verified_units}</td>
         <td>${UI.statusBadge(d.status)}</td>
         <td>${
-          ['admin', 'superadmin'].includes(Shell.role) ?
-            '<span class="muted small">Oversight Only</span>' :
-            `<button class="btn slim ghost" onclick='editDonor(${JSON.stringify(d).replace(/'/g, "&#39;")})'>Edit</button>
+          `<button class="btn slim ghost" onclick='editDonor(${JSON.stringify(d).replace(/'/g, "&#39;")})'>Edit</button>
              <button class="btn slim ${d.status === 'active' ? 'danger-outline' : 'blue'}" onclick="toggleStatus(${d.id},'${d.status}')">${d.status === 'active' ? 'Deactivate' : 'Activate'}</button>`
         }</td></tr>`).join(''));
   }

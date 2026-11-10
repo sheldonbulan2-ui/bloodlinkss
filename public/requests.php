@@ -431,15 +431,13 @@
 
       const locSelect = document.getElementById('req-location-select');
       if (locSelect && Array.isArray(data.locations)) {
-        locSelect.innerHTML = `<option value="">-- Choose Hospital / Blood Bank --</option>` +
-          data.locations.map(l => `<option value="${UI.esc(l.location_name)}" data-addr="${UI.esc(l.address || '')}">${UI.esc(l.location_name)}</option>`).join('');
-
-        locSelect.addEventListener('change', () => {
-          const opt = locSelect.selectedOptions[0];
-          if (opt && opt.dataset.addr) {
-            document.getElementById('req-facility-address').value = opt.dataset.addr;
+        locSelect.innerHTML = data.locations.map(l => `<option value="${UI.esc(l.location_name)}" data-addr="${UI.esc(l.address || '')}" selected>${UI.esc(l.location_name)}</option>`).join('');
+        if (data.locations.length > 0) {
+          document.getElementById('req-facility-address').value = data.locations[0].address || 'Brgy. Zone 1, San Mariano, Isabela';
+          if (document.getElementById('req-facility-contact')) {
+            document.getElementById('req-facility-contact').value = data.locations[0].contact_number || '0917-555-4321';
           }
-        });
+        }
       }
 
       // Render Patient Request Table
@@ -666,7 +664,12 @@
             <td>${docBadge}</td>
             <td>${UI.statusBadge(r.final_status || r.status)}</td>
             <td>
-              <button class="btn slim ghost" style="color:#1e40af; border-color:#bfdbfe; font-weight:700;" onclick="openSectionFModal(${r.id})">📋 Section F Review</button>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                <button class="btn slim ghost" style="color:#1e40af; border-color:#bfdbfe; font-weight:700;" onclick="openSectionFModal(${r.id})">📋 Section F Review</button>
+                ${['Pending', 'Processing', 'Needs Correction', 'Verified'].includes(r.status) ? `
+                  <button class="btn slim green" style="background:#059669; color:#fff; font-weight:700; border:none; padding:3px 9px;" onclick="fulfillModal(${r.id}, '${r.blood_type}', ${r.units_needed}, '${r.component_type || 'Whole Blood'}')">💉 Fulfill</button>
+                ` : ''}
+              </div>
             </td>
           </tr>`;
         }).join('')

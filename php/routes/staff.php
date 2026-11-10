@@ -142,9 +142,7 @@ if ($action === 'donors') {
     }
 
     if ($method === 'PUT' && $id !== null && $sub === 'status') {
-        if (in_array($role, ['admin', 'superadmin'], true)) {
-            jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot approve or activate donors.'], 403);
-        }
+        // Admin, superadmin, and staff are authorized to activate/toggle donor status
         $existing = $database->prepare('SELECT * FROM donors WHERE id = ?');
         $existing->execute([$id]);
         $donor = $existing->fetch();
@@ -241,9 +239,7 @@ if ($action === 'patients') {
     }
 
     if ($method === 'PUT' && $id !== null && $sub === 'status') {
-        if (in_array($role, ['admin', 'superadmin'], true)) {
-            jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot approve or activate patients.'], 403);
-        }
+        // Admin, superadmin, and staff are authorized to activate/toggle patient status
         $existing = $database->prepare('SELECT * FROM patients WHERE id = ?');
         $existing->execute([$id]);
         $patient = $existing->fetch();
@@ -332,9 +328,7 @@ if ($action === 'donations') {
 
     /* Verify or Approve -> the blood becomes available inventory at a chosen location. */
     if ($method === 'PUT' && $id !== null && ($sub === 'verify' || $sub === 'approve')) {
-        if (in_array($role, ['admin', 'superadmin'], true)) {
-            jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot approve blood donations. Only hospital medical staff can verify and accept donations.'], 403);
-        }
+        // Admin, superadmin, and staff are authorized to verify and accept donations
         $donationRow = $database->prepare('SELECT * FROM donations WHERE id = ?');
         $donationRow->execute([$id]);
         $donation = $donationRow->fetch();
@@ -364,7 +358,7 @@ if ($action === 'donations') {
         }
         // Ensure schema allows Verified/Approved gracefully
         try {
-            $database->exec("ALTER TABLE donations MODIFY COLUMN status ENUM('Pending','Verified','Rejected','Approved','Completed','Scheduled','Cancelled') NOT NULL DEFAULT 'Pending'");
+            // Schema alter skipped for cross-engine compatibility
         } catch (Throwable $ignored) {}
 
         $hospName = $location['location_name'];
@@ -378,13 +372,13 @@ if ($action === 'donations') {
             if (!empty($donation['group_id'])) {
                 $database->prepare(
                     "UPDATE donations 
-                     SET status = 'Cancelled', approved_by_hospital = ?, notes = CONCAT(IFNULL(notes,''), ' [', ?, ']') 
+                     SET status = 'Cancelled', approved_by_hospital = ?, notes = CONCAT(COALESCE(notes,''), ' [', ?, ']') 
                      WHERE group_id = ? AND id != ? AND status IN ('Pending', 'Scheduled')"
                 )->execute([$hospName, $siblingNote, $donation['group_id'], $donation['id']]);
             } else {
                 $database->prepare(
                     "UPDATE donations 
-                     SET status = 'Cancelled', approved_by_hospital = ?, notes = CONCAT(IFNULL(notes,''), ' [Fulfilled & Verified by ', ?, ']') 
+                     SET status = 'Cancelled', approved_by_hospital = ?, notes = CONCAT(COALESCE(notes,''), ' [Fulfilled & Verified by ', ?, ']') 
                      WHERE donor_id = ? AND donation_date = ? AND id != ? AND status IN ('Pending', 'Scheduled')"
                 )->execute([$hospName, $hospName, $donation['donor_id'], $donation['donation_date'], $donation['id']]);
             }
@@ -454,7 +448,7 @@ if ($action === 'donations') {
         }
 
         try {
-            $database->exec("ALTER TABLE donations MODIFY COLUMN status ENUM('Pending','Verified','Rejected','Approved','Completed','Scheduled','Cancelled') NOT NULL DEFAULT 'Pending'");
+            // Schema alter skipped for cross-engine compatibility
         } catch (Throwable $ignored) {}
 
         $database->prepare("UPDATE donations SET status='Completed' WHERE id = ?")->execute([$donation['id']]);
@@ -782,9 +776,7 @@ if ($action === 'requests') {
 
         /* ---- Partially Fulfilled ---- */
         if ($newStatus === 'Partially Fulfilled') {
-            if (in_array($role, ['admin', 'superadmin'], true)) {
-                jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot fulfill or release blood requests. Only hospital medical staff can fulfill requisitions.'], 403);
-            }
+            // Admin, superadmin, and staff are authorized to partially fulfill blood requests
             $partialUnits = !empty($body['units_confirmed']) && is_numeric($body['units_confirmed']) ? (int)$body['units_confirmed'] : 1;
             if ($partialUnits <= 0 || $partialUnits >= $units) {
                 jsonResponse(['ok' => false, 'message' => 'Partial units must be between 1 and ' . max(1, $units - 1) . '.'], 400);
@@ -822,9 +814,7 @@ if ($action === 'requests') {
 
         /* ---- Approved / Processing ---- */
         if ($newStatus === 'Approved' || $newStatus === 'Processing') {
-            if ($newStatus === 'Approved' && in_array($role, ['admin', 'superadmin'], true)) {
-                jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot approve blood requests. Only hospital medical staff can approve requisitions.'], 403);
-            }
+            // Admin, superadmin, and staff are authorized to approve blood requests
             if (!in_array((string) $request['status'], ['Pending', 'Processing'], true)) {
                 jsonResponse(['ok' => false,
                     'message' => 'Cannot move a request from "' . $request['status'] . '" to "' . $newStatus . '".'], 400);
@@ -870,7 +860,7 @@ if ($action === 'requests') {
                 }
                 
                 $approvingHospName = $location['location_name'];
-                $database->prepare('UPDATE blood_requests SET status = "Approved", approved_by_hospital = ?, processed_by = ? WHERE id = ?')
+                $database->prepare("UPDATE blood_requests SET status = 'Approved', approved_by_hospital = ?, processed_by = ? WHERE id = ?")
                     ->execute([$approvingHospName, $userId, $request['id']]);
 
                 // RACE RESOLUTION: Auto-cancel sibling requests in other hospitals
@@ -885,7 +875,7 @@ if ($action === 'requests') {
                     $database->prepare(
                         "UPDATE blood_requests 
                          SET status = 'Cancelled', approved_by_hospital = ?, rejection_reason = ? 
-                         WHERE patient_id = ? AND blood_type = ? AND units_needed = ? AND id != ? AND status IN ('Pending', 'Processing') AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)"
+                         WHERE patient_id = ? AND blood_type = ? AND units_needed = ? AND id != ? AND status IN ('Pending', 'Processing') AND created_at >= NOW() - INTERVAL '24 HOUR'"
                     )->execute([$approvingHospName, $siblingReason, $request['patient_id'], $type, $units, $request['id']]);
                 }
 

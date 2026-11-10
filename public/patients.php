@@ -70,9 +70,7 @@
         <td>${p.request_count}</td>
         <td>${UI.statusBadge(p.status)}</td>
         <td>${
-          ['admin', 'superadmin'].includes(Shell.role) ?
-            '<span class="muted small">Oversight Only</span>' :
-            `<button class="btn slim ghost" onclick='editPatient(${JSON.stringify(p).replace(/'/g, "&#39;")})'>Edit</button>
+          `<button class="btn slim ghost" onclick='editPatient(${JSON.stringify(p).replace(/'/g, "&#39;")})'>Edit</button>
              <button class="btn slim ${p.status === 'active' ? 'danger-outline' : 'blue'}" onclick="toggleStatus(${p.id},'${p.status}')">${p.status === 'active' ? 'Deactivate' : 'Activate'}</button>`
         }</td></tr>`).join(''));
   }

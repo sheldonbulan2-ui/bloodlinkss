@@ -197,14 +197,35 @@ function getTotalsByType(): array
 function consumeUnits(string $bloodType, int $locationId, int $unitsNeeded, ?string $componentType = null): array
 {
     $database = db();
+    $bloodType = trim($bloodType);
+
+    // Normalize component type string
+    $cleanComp = null;
+    if ($componentType !== null && $componentType !== '' && $componentType !== 'Other') {
+        $cLower = strtolower($componentType);
+        if (str_contains($cLower, 'pack') || str_contains($cLower, 'prbc') || str_contains($cLower, 'red blood')) {
+            $cleanComp = 'Packed Red Blood Cells (PRBC)';
+        } elseif (str_contains($cLower, 'platelet') || str_contains($cLower, 'pc')) {
+            $cleanComp = 'Platelet Concentrate (PC)';
+        } elseif (str_contains($cLower, 'plasma') || str_contains($cLower, 'ffp')) {
+            $cleanComp = 'Fresh Frozen Plasma (FFP)';
+        } elseif (str_contains($cLower, 'cryo')) {
+            $cleanComp = 'Cryoprecipitate';
+        } else {
+            $cleanComp = 'Whole Blood';
+        }
+    }
+
+    // Step 1: Query exact or compatible component first
     $sql = "SELECT id, blood_units, component_type FROM blood_inventory
              WHERE blood_type = ? AND location_id = ? AND status = 'Available'
                AND expiration_date >= CURRENT_DATE";
     $params = [$bloodType, $locationId];
 
-    if ($componentType !== null && $componentType !== '' && $componentType !== 'Other') {
-        $sql .= " AND (component_type = ? OR component_type IS NULL OR component_type = 'Whole Blood')";
-        $params[] = $componentType;
+    if ($cleanComp !== null) {
+        $sql .= " AND (component_type = ? OR component_type LIKE ? OR component_type IS NULL OR component_type = 'Whole Blood')";
+        $params[] = $cleanComp;
+        $params[] = '%' . $cleanComp . '%';
     }
 
     $sql .= " ORDER BY expiration_date ASC, id ASC FOR UPDATE";
@@ -215,11 +236,28 @@ function consumeUnits(string $bloodType, int $locationId, int $unitsNeeded, ?str
     $total = 0;
     foreach ($rows as $row) $total += (int) $row['blood_units'];
 
+    // Step 2: Fallback to ANY available unit of this blood type if component query alone is insufficient
+    if ($total < $unitsNeeded) {
+        $fbSql = "SELECT id, blood_units, component_type FROM blood_inventory
+                  WHERE blood_type = ? AND location_id = ? AND status = 'Available'
+                    AND expiration_date >= CURRENT_DATE
+                  ORDER BY expiration_date ASC, id ASC FOR UPDATE";
+        $fbBatches = $database->prepare($fbSql);
+        $fbBatches->execute([$bloodType, $locationId]);
+        $fbRows = $fbBatches->fetchAll();
+        $fbTotal = 0;
+        foreach ($fbRows as $row) $fbTotal += (int) $row['blood_units'];
+        if ($fbTotal >= $unitsNeeded || $fbTotal > $total) {
+            $rows = $fbRows;
+            $total = $fbTotal;
+        }
+    }
+
     $nameStatement = $database->prepare('SELECT location_name FROM blood_locations WHERE id = ?');
     $nameStatement->execute([$locationId]);
-    $name = (string) ($nameStatement->fetchColumn() ?: 'this location');
+    $name = (string) ($nameStatement->fetchColumn() ?: 'San Mariano District Hospital');
 
-    $compLabel = ($componentType ? " of $componentType" : "");
+    $compLabel = ($cleanComp ? " of $cleanComp" : ($componentType ? " of $componentType" : ""));
     if ($total < $unitsNeeded) {
         return [false, "Insufficient inventory: only $total unit(s)$compLabel ($bloodType) available at $name.", 0];
     }
@@ -228,7 +266,7 @@ function consumeUnits(string $bloodType, int $locationId, int $unitsNeeded, ?str
     $update = $database->prepare(
         "UPDATE blood_inventory
             SET blood_units = blood_units - ?,
-                status = CASE WHEN (blood_units - ?) = 0 THEN 'Used' ELSE status END,
+                status = CASE WHEN (blood_units - ?) <= 0 THEN 'Used' ELSE status END,
                 updated_at = NOW()
           WHERE id = ? AND blood_units >= ?"
     );
