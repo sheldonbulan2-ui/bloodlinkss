@@ -132,6 +132,8 @@
         }</td>
         <td class="muted small">${UI.esc(d.recorded_by_user || '-')}</td>
         <td>${
+          ['admin', 'superadmin'].includes(Shell.role) ?
+            '<span class="muted small">Oversight Only</span>' :
           d.status === 'Cancelled' ?
             (d.approved_by_hospital ? `<small class="muted" style="font-size:11px; white-space:nowrap;">Fulfilled elsewhere</small>` : '-') :
           d.status === 'Pending' ? `

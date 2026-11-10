@@ -142,6 +142,9 @@ if ($action === 'donors') {
     }
 
     if ($method === 'PUT' && $id !== null && $sub === 'status') {
+        if (in_array($role, ['admin', 'superadmin'], true)) {
+            jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot approve or activate donors.'], 403);
+        }
         $existing = $database->prepare('SELECT * FROM donors WHERE id = ?');
         $existing->execute([$id]);
         $donor = $existing->fetch();
@@ -238,6 +241,9 @@ if ($action === 'patients') {
     }
 
     if ($method === 'PUT' && $id !== null && $sub === 'status') {
+        if (in_array($role, ['admin', 'superadmin'], true)) {
+            jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot approve or activate patients.'], 403);
+        }
         $existing = $database->prepare('SELECT * FROM patients WHERE id = ?');
         $existing->execute([$id]);
         $patient = $existing->fetch();
@@ -326,6 +332,9 @@ if ($action === 'donations') {
 
     /* Verify or Approve -> the blood becomes available inventory at a chosen location. */
     if ($method === 'PUT' && $id !== null && ($sub === 'verify' || $sub === 'approve')) {
+        if (in_array($role, ['admin', 'superadmin'], true)) {
+            jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot approve blood donations. Only hospital medical staff can verify and accept donations.'], 403);
+        }
         $donationRow = $database->prepare('SELECT * FROM donations WHERE id = ?');
         $donationRow->execute([$id]);
         $donation = $donationRow->fetch();
@@ -773,6 +782,9 @@ if ($action === 'requests') {
 
         /* ---- Partially Fulfilled ---- */
         if ($newStatus === 'Partially Fulfilled') {
+            if (in_array($role, ['admin', 'superadmin'], true)) {
+                jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot fulfill or release blood requests. Only hospital medical staff can fulfill requisitions.'], 403);
+            }
             $partialUnits = !empty($body['units_confirmed']) && is_numeric($body['units_confirmed']) ? (int)$body['units_confirmed'] : 1;
             if ($partialUnits <= 0 || $partialUnits >= $units) {
                 jsonResponse(['ok' => false, 'message' => 'Partial units must be between 1 and ' . max(1, $units - 1) . '.'], 400);
@@ -810,6 +822,9 @@ if ($action === 'requests') {
 
         /* ---- Approved / Processing ---- */
         if ($newStatus === 'Approved' || $newStatus === 'Processing') {
+            if ($newStatus === 'Approved' && in_array($role, ['admin', 'superadmin'], true)) {
+                jsonResponse(['ok' => false, 'message' => 'Admins and Superadmins cannot approve blood requests. Only hospital medical staff can approve requisitions.'], 403);
+            }
             if (!in_array((string) $request['status'], ['Pending', 'Processing'], true)) {
                 jsonResponse(['ok' => false,
                     'message' => 'Cannot move a request from "' . $request['status'] . '" to "' . $newStatus . '".'], 400);
@@ -1059,16 +1074,26 @@ if ($action === 'locations') {
     if ($method === 'GET' && $id === null) {
         sweepExpired();
         ensureHospitalSchema();
+        $driver = defined('DB_DRIVER') ? strtolower(trim((string) DB_DRIVER)) : 'mysql';
+        $isPg = in_array($driver, ['pgsql', 'postgres', 'postgresql', 'supabase'], true);
+        $staffAgg = $isPg
+            ? "(SELECT STRING_AGG(username, ', ') FROM users WHERE hospital_id = l.id AND role = 'staff' AND status = 'active')"
+            : "(SELECT GROUP_CONCAT(username SEPARATOR ', ') FROM users WHERE hospital_id = l.id AND role = 'staff' AND status = 'active')";
+        $adminAgg = $isPg
+            ? "(SELECT STRING_AGG(username, ', ') FROM users WHERE hospital_id = l.id AND role = 'admin' AND status = 'active')"
+            : "(SELECT GROUP_CONCAT(username SEPARATOR ', ') FROM users WHERE hospital_id = l.id AND role = 'admin' AND status = 'active')";
+
         $rows = $database->query(
             "SELECT l.*, u.username AS admin_username, u.email AS admin_email,
                     (SELECT COALESCE(SUM(i.blood_units), 0) FROM blood_inventory i
                       WHERE i.location_id = l.id AND i.status = 'Available'
                         AND i.expiration_date >= CURRENT_DATE) AS available_units,
-                    (SELECT GROUP_CONCAT(username SEPARATOR ', ') FROM users WHERE hospital_id = l.id AND role = 'staff' AND status = 'active') AS staff_usernames,
+                    $staffAgg AS staff_usernames,
                     (SELECT COUNT(*) FROM users WHERE hospital_id = l.id AND role = 'staff' AND status = 'active') AS staff_count,
-                    (SELECT GROUP_CONCAT(username SEPARATOR ', ') FROM users WHERE hospital_id = l.id AND role = 'admin' AND status = 'active') AS all_admins
+                    $adminAgg AS all_admins
                FROM blood_locations l
           LEFT JOIN users u ON u.id = l.admin_id
+              WHERE l.available_status = 'Active'
               ORDER BY l.location_name"
         )->fetchAll();
         foreach ($rows as $index => $row) {

@@ -45,26 +45,46 @@ if ($action === 'users') {
     if ($method === 'GET' && $id === null) {
         ensureHospitalSchema();
         if ($role === 'superadmin') {
+            // Requirement: Superadmin sees ONLY patient and donor users, organized by hospital
             $rows = $database->query(
                 "SELECT u.id, u.username, u.email, u.role, u.status, u.created_at, u.updated_at, u.hospital_id,
-                        l.location_name AS hospital_name
+                        COALESCE(l.location_name, p.hospital, 'San Mariano District Hospital') AS hospital_name,
+                        COALESCE(p.first_name, d.first_name, u.username) AS first_name,
+                        COALESCE(p.last_name, d.last_name, '') AS last_name,
+                        COALESCE(p.contact_number, d.contact_number, '') AS contact_number,
+                        COALESCE(p.address, d.address, '') AS address,
+                        COALESCE(p.blood_type_needed, d.blood_type, '') AS blood_type
                    FROM users u
+              LEFT JOIN patients p ON p.user_id = u.id
+              LEFT JOIN donors d ON d.user_id = u.id
               LEFT JOIN blood_locations l ON l.id = u.hospital_id
-                  WHERE u.role IN ('superadmin', 'admin', 'staff')
-                  ORDER BY FIELD(u.role, 'superadmin', 'admin', 'staff'), u.username"
+                  WHERE u.role IN ('patient', 'donor')
+                  ORDER BY hospital_name ASC, u.role ASC, u.username ASC"
             )->fetchAll();
         } else {
-            // Hospital Admin only sees staff belonging to their assigned hospital
-            $hospitalId = (int) ($user['hospital_id'] ?? 0);
+            // Requirement: Admin sees ONLY users belonging to their assigned hospital
+            $hospitalId = (int) ($user['hospital_id'] ?? 1);
+            $hnStmt = $database->prepare("SELECT location_name FROM blood_locations WHERE id = ?");
+            $hnStmt->execute([$hospitalId]);
+            $hospName = $hnStmt->fetchColumn() ?: 'San Mariano District Hospital';
+
             $stmt = $database->prepare(
                 "SELECT u.id, u.username, u.email, u.role, u.status, u.created_at, u.updated_at, u.hospital_id,
-                        l.location_name AS hospital_name
+                        COALESCE(l.location_name, p.hospital, ?) AS hospital_name,
+                        COALESCE(p.first_name, d.first_name, u.username) AS first_name,
+                        COALESCE(p.last_name, d.last_name, '') AS last_name,
+                        COALESCE(p.contact_number, d.contact_number, '') AS contact_number,
+                        COALESCE(p.address, d.address, '') AS address,
+                        COALESCE(p.blood_type_needed, d.blood_type, '') AS blood_type
                    FROM users u
+              LEFT JOIN patients p ON p.user_id = u.id
+              LEFT JOIN donors d ON d.user_id = u.id
               LEFT JOIN blood_locations l ON l.id = u.hospital_id
-                  WHERE u.role = 'staff' AND u.hospital_id = ?
-                  ORDER BY u.username"
+                  WHERE (u.hospital_id = ? OR p.hospital = ? OR l.id = ?)
+                    AND u.role != 'superadmin'
+                  ORDER BY u.role ASC, u.username ASC"
             );
-            $stmt->execute([$hospitalId]);
+            $stmt->execute([$hospName, $hospitalId, $hospName, $hospitalId]);
             $rows = $stmt->fetchAll();
         }
         jsonResponse(['ok' => true, 'users' => $rows]);

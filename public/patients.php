@@ -69,10 +69,12 @@
         <td class="muted small">${UI.esc(p.hospital)}</td>
         <td>${p.request_count}</td>
         <td>${UI.statusBadge(p.status)}</td>
-        <td>
-          <button class="btn slim ghost" onclick='editPatient(${JSON.stringify(p).replace(/'/g, "&#39;")})'>Edit</button>
-          <button class="btn slim ${p.status === 'active' ? 'danger-outline' : 'blue'}" onclick="toggleStatus(${p.id},'${p.status}')">${p.status === 'active' ? 'Deactivate' : 'Activate'}</button>
-        </td></tr>`).join(''));
+        <td>${
+          ['admin', 'superadmin'].includes(Shell.role) ?
+            '<span class="muted small">Oversight Only</span>' :
+            `<button class="btn slim ghost" onclick='editPatient(${JSON.stringify(p).replace(/'/g, "&#39;")})'>Edit</button>
+             <button class="btn slim ${p.status === 'active' ? 'danger-outline' : 'blue'}" onclick="toggleStatus(${p.id},'${p.status}')">${p.status === 'active' ? 'Deactivate' : 'Activate'}</button>`
+        }</td></tr>`).join(''));
   }
 
   window.editPatient = (p) => {

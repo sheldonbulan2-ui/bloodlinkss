@@ -81,12 +81,12 @@
     <div class="dash-hero" style="margin-bottom:16px;">
       <div>
         <h1 style="font-size:20px; font-weight:800; margin:0 0 4px 0;">
-          ${isSuper ? '🏥 Registered Admin &amp; Staff (Organized by Hospital)' : `Official Staff &mdash; ${UI.esc(hospitalName)}`}
+          ${isSuper ? '🏥 Registered Patients &amp; Voluntary Donors (Organized by Hospital)' : `Official Hospital Users &mdash; ${UI.esc(hospitalName)}`}
         </h1>
         <p style="margin:0; font-size:13.5px; color:#4b5563;">
           ${isSuper
-            ? 'Superadmin directory organizing and separating all registered administrators and hospital staff by their assigned facility.'
-            : `Create and supervise official staff accounts for <b>${UI.esc(hospitalName)}</b>.`}
+            ? 'Superadmin directory showing registered patients and voluntary donors strictly organized and separated by their hospital facility.'
+            : `Directory of registered users belonging strictly to <b>${UI.esc(hospitalName)}</b>.`}
         </p>
       </div>
       <div>
@@ -190,56 +190,50 @@
     }
 
     // =========================================================================
-    // 1. SUPERADMIN VIEW: SEPARATED BY HOSPITALS
+    // 1. SUPERADMIN VIEW: PATIENTS & DONORS ORGANIZED BY HOSPITAL
     // =========================================================================
     if (isSuper) {
-      // Group users by hospital
+      // Group users strictly by hospital
       const groups = {};
 
       filtered.forEach(u => {
-        let key = u.hospital_id ? `hosp_${u.hospital_id}` : 'central';
-        if (u.role === 'superadmin') key = 'central';
+        const hospName = u.hospital_name || 'San Mariano District Hospital';
+        let key = 'hosp_' + hospName.toLowerCase().replace(/[^a-z0-9]/g, '_');
 
         if (!groups[key]) {
           groups[key] = {
-            id: u.hospital_id || 0,
-            name: (u.role === 'superadmin' || !u.hospital_name) ? '🛡️ Network Central / System Superadmins' : `🏥 ${u.hospital_name}`,
-            isCentral: key === 'central',
+            name: `🏥 ${hospName}`,
             users: []
           };
         }
         groups[key].users.push(u);
       });
 
-      // Render each hospital group separately
+      // Render each hospital group with Donors & Patients
       container.innerHTML = Object.values(groups).map(g => {
-        const admins = g.users.filter(x => x.role === 'admin').length;
-        const staff = g.users.filter(x => x.role === 'staff').length;
-        const supers = g.users.filter(x => x.role === 'superadmin').length;
+        const donors = g.users.filter(x => x.role === 'donor').length;
+        const patients = g.users.filter(x => x.role === 'patient').length;
 
-        const cols = ['ID', 'Username', 'Email', 'Role', 'Status', 'Created', 'Actions'];
-        const rowsHtml = g.users.map(u => `
-          <tr>
-            <td>#${u.id}</td>
-            <td><b>${UI.esc(u.username)}</b></td>
-            <td class="small muted">${UI.esc(u.email || '—')}</td>
-            <td>
-              <span class="badge ${u.role === 'superadmin' ? 'red' : (u.role === 'admin' ? 'blue' : 'dark')}">
-                ${u.role === 'superadmin' ? '🛡️ Superadmin' : (u.role === 'admin' ? '👔 Admin' : '🩺 Staff')}
-              </span>
-            </td>
-            <td>${UI.statusBadge(u.status)}</td>
-            <td class="muted small">${UI.fmtDate(u.created_at)}</td>
-            <td>
-              ${u.role === 'superadmin' ? '<span class="muted small">Protected</span>' : `
-                <button class="btn slim ghost" data-uname="${UI.esc(u.username)}" onclick="editUser(${u.id}, this.dataset.uname)">Edit</button>
-                <button class="btn slim ${u.status === 'active' ? 'danger-outline' : 'blue'}" onclick="toggleUser(${u.id},'${u.status}')">
-                  ${u.status === 'active' ? 'Deactivate' : 'Activate'}
-                </button>
-              `}
-            </td>
-          </tr>
-        `).join('');
+        const cols = ['User ID', 'Name / Username', 'Contact Number', 'Blood Type', 'Role', 'Barangay / Address', 'Status', 'Registered Date'];
+        const rowsHtml = g.users.map(u => {
+          const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || u.username;
+          return `
+            <tr>
+              <td>#${u.id}</td>
+              <td><b>${UI.esc(fullName)}</b><br><span class="muted small">@${UI.esc(u.username)}</span></td>
+              <td class="small muted">${UI.esc(u.contact_number || u.email || '—')}</td>
+              <td><span class="chip" style="font-weight:800; color:#b91c1c;">${UI.esc(u.blood_type || '—')}</span></td>
+              <td>
+                <span class="badge ${u.role === 'donor' ? 'red' : 'blue'}">
+                  ${u.role === 'donor' ? '🩸 Voluntary Donor' : '🩹 Patient'}
+                </span>
+              </td>
+              <td class="small muted">${UI.esc(u.address || 'San Mariano, Isabela')}</td>
+              <td>${UI.statusBadge(u.status)}</td>
+              <td class="muted small">${UI.fmtDate(u.created_at)}</td>
+            </tr>
+          `;
+        }).join('');
 
         return `
           <div class="hospital-group-card">
@@ -248,10 +242,9 @@
                 ${UI.esc(g.name)}
               </div>
               <div class="hospital-group-meta">
-                ${supers > 0 ? `<span class="chip" style="background:#fee2e2; color:#991b1b; font-weight:700;">${supers} Superadmin</span>` : ''}
-                ${admins > 0 ? `<span class="chip" style="background:#dbeafe; color:#1e40af; font-weight:700;">👔 ${admins} Admin</span>` : ''}
-                ${staff > 0 ? `<span class="chip" style="background:#f1f5f9; color:#334155; font-weight:700;">🩺 ${staff} Staff</span>` : ''}
-                <span class="chip" style="background:#f8fafc; color:#64748b; font-weight:700;">Total: ${g.users.length}</span>
+                ${donors > 0 ? `<span class="chip" style="background:#fee2e2; color:#991b1b; font-weight:700;">🩸 ${donors} Donors</span>` : ''}
+                ${patients > 0 ? `<span class="chip" style="background:#dbeafe; color:#1e40af; font-weight:700;">🩹 ${patients} Patients</span>` : ''}
+                <span class="chip" style="background:#f8fafc; color:#64748b; font-weight:700;">Total Users: ${g.users.length}</span>
               </div>
             </div>
             <div class="table-wrap" style="border:none; margin:0;">
@@ -272,24 +265,27 @@
 
     } else {
       // =========================================================================
-      // 2. HOSPITAL ADMIN VIEW: ROLE COLUMN REMOVED PER REQUIREMENT
+      // 2. HOSPITAL ADMIN VIEW: USERS BELONGING TO THEIR OWN HOSPITAL
       // =========================================================================
-      const cols = ['ID', 'Staff Username', 'Email', 'Status', 'Created', 'Actions'];
-      const rowsHtml = filtered.map(u => `
-        <tr>
-          <td>#${u.id}</td>
-          <td><b>${UI.esc(u.username)}</b></td>
-          <td class="small muted">${UI.esc(u.email || '—')}</td>
-          <td>${UI.statusBadge(u.status)}</td>
-          <td class="muted small">${UI.fmtDate(u.created_at)}</td>
-          <td>
-            <button class="btn slim ghost" data-uname="${UI.esc(u.username)}" onclick="editUser(${u.id}, this.dataset.uname)">Edit</button>
-            <button class="btn slim ${u.status === 'active' ? 'danger-outline' : 'blue'}" onclick="toggleUser(${u.id},'${u.status}')">
-              ${u.status === 'active' ? 'Deactivate' : 'Activate'}
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      const cols = ['ID', 'Name / Username', 'Contact', 'Blood Type', 'Role', 'Status', 'Registered Date'];
+      const rowsHtml = filtered.map(u => {
+        const fullName = ((u.first_name || '') + ' ' + (u.last_name || '')).trim() || u.username;
+        return `
+          <tr>
+            <td>#${u.id}</td>
+            <td><b>${UI.esc(fullName)}</b><br><span class="muted small">@${UI.esc(u.username)}</span></td>
+            <td class="small muted">${UI.esc(u.contact_number || u.email || '—')}</td>
+            <td><span class="chip" style="font-weight:800; color:#b91c1c;">${UI.esc(u.blood_type || '—')}</span></td>
+            <td>
+              <span class="badge ${u.role === 'donor' ? 'red' : (u.role === 'patient' ? 'blue' : 'dark')}">
+                ${u.role === 'donor' ? '🩸 Donor' : (u.role === 'patient' ? '🩹 Patient' : '🩺 Staff')}
+              </span>
+            </td>
+            <td>${UI.statusBadge(u.status)}</td>
+            <td class="muted small">${UI.fmtDate(u.created_at)}</td>
+          </tr>
+        `;
+      }).join('');
 
       container.innerHTML = `
         <div class="card" style="padding:0; overflow:hidden;">

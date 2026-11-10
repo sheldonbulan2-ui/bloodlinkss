@@ -1185,30 +1185,47 @@ if ($method === 'POST') {
     $contact = trim($data['contact_number'] ?? '09171234567');
     $medicalDocumentUrl = trim($data['medical_document_url'] ?? '');
 
-    // Map to specific patient_id
+    // Map to specific patient_id safely (prevent FK constraint violation)
     $patientId = null;
+    $validUserId = null;
     if ($userId > 0) {
+        $uCheck = $pdo->prepare("SELECT id FROM users WHERE id = ?");
+        $uCheck->execute([$userId]);
+        $validUserId = $uCheck->fetchColumn() ?: null;
+    }
+    if (!$validUserId && $username !== '') {
+        $uCheck = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        $uCheck->execute([$username]);
+        $validUserId = $uCheck->fetchColumn() ?: null;
+    }
+
+    if ($validUserId) {
         $stmt = $pdo->prepare("SELECT id FROM patients WHERE user_id = ?");
-        $stmt->execute([$userId]);
-        $patientId = $stmt->fetchColumn();
+        $stmt->execute([$validUserId]);
+        $patientId = $stmt->fetchColumn() ?: null;
     }
     if (!$patientId && $username !== '') {
         $stmt = $pdo->prepare("SELECT p.id FROM patients p JOIN users u ON p.user_id = u.id WHERE u.username = ?");
         $stmt->execute([$username]);
-        $patientId = $stmt->fetchColumn();
+        $patientId = $stmt->fetchColumn() ?: null;
     }
     if (!$patientId) {
-        if ($userId > 0) {
-            $lastRow = $pdo->query("SELECT patient_code FROM patients WHERE patient_code LIKE 'PAT-%' ORDER BY id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
-            $lastNum = 0;
-            if ($lastRow && preg_match('/(\d+)$/', (string) $lastRow['patient_code'], $m)) {
-                $lastNum = (int) $m[1];
+        if ($validUserId) {
+            try {
+                $lastRow = $pdo->query("SELECT patient_code FROM patients WHERE patient_code LIKE 'PAT-%' ORDER BY id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+                $lastNum = 0;
+                if ($lastRow && preg_match('/(\d+)$/', (string) $lastRow['patient_code'], $m)) {
+                    $lastNum = (int) $m[1];
+                }
+                $pCode = 'PAT-' . str_pad((string) ($lastNum + 1), 5, '0', STR_PAD_LEFT);
+                $pdo->prepare("INSERT INTO patients (user_id, patient_code, first_name, last_name, contact_number, hospital, blood_type_needed) VALUES (?, ?, ?, '', ?, ?, ?)")
+                    ->execute([$validUserId, $pCode, $patientName, $contact, $location, $bloodType]);
+                $patientId = (int) $pdo->lastInsertId();
+            } catch (Throwable $pe) {
+                $patientId = null;
             }
-            $pCode = 'PAT-' . str_pad((string) ($lastNum + 1), 5, '0', STR_PAD_LEFT);
-            $pdo->prepare("INSERT INTO patients (user_id, patient_code, first_name, last_name, contact_number, hospital, blood_type_needed) VALUES (?, ?, ?, '', ?, ?, ?)")
-                ->execute([$userId, $pCode, $patientName, $contact, $location, $bloodType]);
-            $patientId = (int) $pdo->lastInsertId();
-        } else {
+        }
+        if (!$patientId) {
             $patientId = $pdo->query("SELECT id FROM patients LIMIT 1")->fetchColumn() ?: 1;
         }
     }
@@ -1269,55 +1286,67 @@ if ($method === 'POST') {
     $physicianSignature = trim((string)($data['physician_signature'] ?? ''));
     $physicianSignedAt = (!empty($physicianSignature) || !empty($physicianName)) ? date('Y-m-d H:i:s') : null;
 
-    $stmt = $pdo->prepare("INSERT INTO blood_requests (
-        patient_id, patient_name, blood_type, component_type, units_needed, priority, reason, location, contact_number,
-        status, medical_document_url, request_ref_no, hospital_department, facility_address, facility_contact,
-        patient_dob, patient_age, patient_mrn, patient_sex, ward_room, clinical_indication,
-        urgency_level, special_requirements, requester_name, requester_relationship, requester_contact, requester_email,
-        physician_name, physician_license_no, physician_signature, physician_signed_at,
-        document_status, final_status
-    ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        'Pending', ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?,
-        'Pending', 'Pending'
-    )");
-    $stmt->execute([
-        $patientId,
-        $patientName,
-        $bloodType,
-        $componentType,
-        $unitsNeeded,
-        $priority,
-        $reason,
-        $location,
-        $contact,
-        $medicalDocumentUrl !== '' ? $medicalDocumentUrl : null,
-        $requestRefNo,
-        $hospDept,
-        $facilityAddr,
-        $facilityContact,
-        $patientDob,
-        $patientAge,
-        $patientMrn,
-        $patientSex,
-        $wardRoom,
-        $clinicalIndication,
-        $urgencyLevel,
-        $specialRequirements,
-        $requesterName,
-        $requesterRelationship,
-        $requesterContact,
-        $requesterEmail,
-        $physicianName,
-        $physicianLicenseNo,
-        $physicianSignature,
-        $physicianSignedAt
-    ]);
+    try {
+        $stmt = $pdo->prepare("INSERT INTO blood_requests (
+            patient_id, patient_name, blood_type, component_type, units_needed, priority, reason, location, contact_number,
+            status, medical_document_url, request_ref_no, hospital_department, facility_address, facility_contact,
+            patient_dob, patient_age, patient_mrn, patient_sex, ward_room, clinical_indication,
+            urgency_level, special_requirements, requester_name, requester_relationship, requester_contact, requester_email,
+            physician_name, physician_license_no, physician_signature, physician_signed_at,
+            document_status, final_status
+        ) VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?,
+            'Pending', ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?,
+            'Pending', 'Pending'
+        )");
+        $stmt->execute([
+            $patientId,
+            $patientName,
+            $bloodType,
+            $componentType,
+            $unitsNeeded,
+            $priority,
+            $reason,
+            $location,
+            $contact,
+            $medicalDocumentUrl !== '' ? $medicalDocumentUrl : null,
+            $requestRefNo,
+            $hospDept,
+            $facilityAddr,
+            $facilityContact,
+            $patientDob,
+            $patientAge,
+            $patientMrn,
+            $patientSex,
+            $wardRoom,
+            $clinicalIndication,
+            $urgencyLevel,
+            $specialRequirements,
+            $requesterName,
+            $requesterRelationship,
+            $requesterContact,
+            $requesterEmail,
+            $physicianName,
+            $physicianLicenseNo,
+            $physicianSignature,
+            $physicianSignedAt
+        ]);
 
-    $insertedId = (int) $pdo->lastInsertId();
+        $insertedId = (int) $pdo->lastInsertId();
+        if ($insertedId <= 0) {
+            $insertedId = (int) $pdo->query("SELECT MAX(id) FROM blood_requests")->fetchColumn() ?: 1;
+        }
+    } catch (Throwable $e) {
+        http_response_code(500);
+        echo json_encode([
+            "success" => false,
+            "error" => "Hindi naisumite ang blood request: " . $e->getMessage()
+        ]);
+        exit;
+    }
 
     $blankFormUrl = null;
     try {

@@ -25,16 +25,8 @@
 
   const page = Shell.page();
   
-  // Fetch nearby locations for the dropdown
-  let locOptions = '<option value="">Select a location...</option><option value="ALL_HOSPITALS">🚨 Broadcast to ALL Verified Centers (Urgent Available Booking)</option>';
-  try {
-    const nearby = await API.get('/api/donor/nearby');
-    if (nearby.locations && nearby.locations.length) {
-      locOptions += nearby.locations.map(l => `<option value="${UI.esc(l.location_name)}">${UI.esc(l.location_name)} - ${UI.esc(l.address)}</option>`).join('');
-    }
-  } catch (e) {
-    console.error(e);
-  }
+  // Single Verified Hospital for both App and Web
+  let locOptions = '<option value="San Mariano District Hospital" selected>🏥 San Mariano District Hospital &mdash; Brgy. Zone 1, San Mariano, Isabela</option>';
 
   const today = new Date().toISOString().slice(0, 10);
 

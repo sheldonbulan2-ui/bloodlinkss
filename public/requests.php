@@ -818,9 +818,11 @@
                 <button type="button" class="btn" style="background:#2563eb; color:#fff; padding:7px 16px; font-size:13px; font-weight:700; border-radius:6px; display:inline-flex; align-items:center; gap:6px;" onclick="saveSectionF(${r.id})">
                   💾 Save Section F Verification
                 </button>
+                ${['admin', 'superadmin'].includes(Shell.role) ? '' : `
                 <button type="button" class="btn green" style="background:#059669; color:#fff; padding:7px 18px; font-size:13px; font-weight:700; border-radius:6px; display:inline-flex; align-items:center; gap:6px;" onclick="fulfillModal(${r.id}, '${r.blood_type}', ${r.units_needed}, '${r.component_type || 'Whole Blood'}')">
                   💉 Fulfill &amp; Release
                 </button>
+                `}
               </div>
             </div>
           </div>
