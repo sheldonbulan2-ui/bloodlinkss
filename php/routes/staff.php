@@ -987,7 +987,8 @@ if ($action === 'requests') {
                         if ($batchId) {
                             $database->prepare("UPDATE blood_inventory SET blood_units = blood_units + ? WHERE id = ?")->execute([$units, $batchId]);
                         } else {
-                            $database->prepare("INSERT INTO blood_inventory (blood_type, blood_units, location_id, expiration_date, status) VALUES (?, ?, ?, DATE_ADD(CURRENT_DATE, INTERVAL 35 DAY), 'Available')")->execute([$type, $units, $locId]);
+                            $restoreExp = date('Y-m-d', strtotime('+35 days'));
+                            $database->prepare("INSERT INTO blood_inventory (blood_type, blood_units, location_id, expiration_date, status) VALUES (?, ?, ?, ?, 'Available')")->execute([$type, $units, $locId, $restoreExp]);
                         }
                     }
                     $database->prepare('UPDATE blood_requests SET inventory_deducted = 0 WHERE id = ?')->execute([$request['id']]);
@@ -1033,7 +1034,8 @@ if ($action === 'requests') {
                         if ($batchId) {
                             $database->prepare("UPDATE blood_inventory SET blood_units = blood_units + ? WHERE id = ?")->execute([$units, $batchId]);
                         } else {
-                            $database->prepare("INSERT INTO blood_inventory (blood_type, blood_units, location_id, expiration_date, status) VALUES (?, ?, ?, DATE_ADD(CURRENT_DATE, INTERVAL 35 DAY), 'Available')")->execute([$type, $units, $locId]);
+                            $restoreExp = date('Y-m-d', strtotime('+35 days'));
+                            $database->prepare("INSERT INTO blood_inventory (blood_type, blood_units, location_id, expiration_date, status) VALUES (?, ?, ?, ?, 'Available')")->execute([$type, $units, $locId, $restoreExp]);
                         }
                     }
                     $database->prepare('UPDATE blood_requests SET inventory_deducted = 0 WHERE id = ?')->execute([$request['id']]);

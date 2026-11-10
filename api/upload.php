@@ -7,6 +7,7 @@
  */
 declare(strict_types=1);
 
+if (!defined('BL_API')) define('BL_API', true);
 ini_set('display_errors', '0');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 register_shutdown_function(function() {

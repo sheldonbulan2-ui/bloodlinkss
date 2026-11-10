@@ -229,7 +229,7 @@ if ($action === 'forgot-password' && $method === 'POST') {
     }
 
     $statement = db()->prepare(
-        'SELECT id, email FROM users WHERE (username = ? OR email = ?) AND status = "active" LIMIT 1'
+        "SELECT id, email FROM users WHERE (username = ? OR email = ?) AND status = 'active' LIMIT 1"
     );
     $statement->execute([$identifier, $identifier]);
     $user = $statement->fetch();

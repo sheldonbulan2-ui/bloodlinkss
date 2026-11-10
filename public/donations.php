@@ -134,11 +134,11 @@
         <td>${
           d.status === 'Cancelled' ?
             (d.approved_by_hospital ? `<small class="muted" style="font-size:11px; white-space:nowrap;">Fulfilled elsewhere</small>` : '-') :
-          d.status === 'Pending' ? `
+          d.status === 'Pending' ? (Shell.role === 'staff' ? `
             <button class="btn slim" onclick="approveDon(${d.id},'${d.blood_type}',${d.blood_units})">Accept</button>
-            <button class="btn slim danger-outline" onclick="rejectDon(${d.id})">Reject</button>` :
-          (d.status === 'Verified' || d.status === 'Approved') ? `
-            <button class="btn slim" style="background:#15803d;color:#fff;border:none;font-weight:600;padding:4px 10px;" onclick="completeDon(${d.id})">&#10003; Complete</button>` :
+            <button class="btn slim danger-outline" onclick="rejectDon(${d.id})">Reject</button>` : `<span class="badge yellow">Pending Review</span>`) :
+          (d.status === 'Verified' || d.status === 'Approved') ? (Shell.role === 'staff' ? `
+            <button class="btn slim" style="background:#15803d;color:#fff;border:none;font-weight:600;padding:4px 10px;" onclick="completeDon(${d.id})">&#10003; Complete</button>` : `<span class="badge blue">Verified</span>`) :
           (d.status === 'Completed') ? `
             <span class="badge green" style="font-weight:700;">&#10003; Completed</span>` :
           '-'

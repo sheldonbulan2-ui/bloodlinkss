@@ -4,6 +4,7 @@
  * ---------------------------------------------------
  * Bridges the Android App with the Web Portal locally.
  */
+if (!defined('BL_API')) define('BL_API', true);
 ini_set('display_errors', '0');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 register_shutdown_function(function() {
@@ -1196,7 +1197,8 @@ if ($method === 'POST') {
     $unitsNeeded = max(1, (int) ($data['units_needed'] ?? 1));
     $priority = in_array($data['priority'] ?? '', ['Normal', 'Urgent', 'Critical']) ? $data['priority'] : 'Urgent';
     $reason = trim($data['reason'] ?? 'Emergency Transfusion - Sent from Android App');
-    $location = trim($data['location'] ?? $data['hospital'] ?? 'San Mariano District Hospital');
+    $location = 'San Mariano District Hospital';
+    $targetHospitalId = 1;
     $contact = trim($data['contact_number'] ?? '09171234567');
     $medicalDocumentUrl = trim($data['medical_document_url'] ?? '');
 
@@ -1224,56 +1226,46 @@ if ($method === 'POST') {
         $stmt->execute([$username]);
         $patientId = $stmt->fetchColumn() ?: null;
     }
-    if (!$patientId) {
-        if ($validUserId) {
-            try {
-                $lastRow = $pdo->query("SELECT patient_code FROM patients WHERE patient_code LIKE 'PAT-%' ORDER BY id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
-                $lastNum = 0;
-                if ($lastRow && preg_match('/(\d+)$/', (string) $lastRow['patient_code'], $m)) {
-                    $lastNum = (int) $m[1];
-                }
-                $pCode = 'PAT-' . str_pad((string) ($lastNum + 1), 5, '0', STR_PAD_LEFT);
-                $pdo->prepare("INSERT INTO patients (user_id, patient_code, first_name, last_name, contact_number, hospital, blood_type_needed) VALUES (?, ?, ?, '', ?, ?, ?)")
-                    ->execute([$validUserId, $pCode, $patientName, $contact, $location, $bloodType]);
-                $patientId = (int) $pdo->lastInsertId();
-            } catch (Throwable $pe) {
-                $patientId = null;
+    if (!$patientId && $patientName !== '') {
+        $pMatch = $pdo->prepare("SELECT id FROM patients WHERE CONCAT(COALESCE(first_name,''), ' ', COALESCE(last_name,'')) LIKE ? OR first_name LIKE ? ORDER BY id DESC LIMIT 1");
+        $pMatch->execute(['%' . $patientName . '%', '%' . $patientName . '%']);
+        $patientId = $pMatch->fetchColumn() ?: null;
+    }
+    if (!$patientId && $validUserId) {
+        try {
+            $lastRow = $pdo->query("SELECT patient_code FROM patients WHERE patient_code LIKE 'PAT-%' ORDER BY id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+            $lastNum = 0;
+            if ($lastRow && preg_match('/(\d+)$/', (string) $lastRow['patient_code'], $m)) {
+                $lastNum = (int) $m[1];
             }
-        }
-        if (!$patientId) {
-            $patientId = $pdo->query("SELECT id FROM patients LIMIT 1")->fetchColumn() ?: 1;
+            $pCode = 'PAT-' . str_pad((string) ($lastNum + 1), 5, '0', STR_PAD_LEFT);
+            $pdo->prepare("INSERT INTO patients (user_id, patient_code, first_name, last_name, contact_number, hospital, blood_type_needed) VALUES (?, ?, ?, '', ?, ?, ?)")
+                ->execute([$validUserId, $pCode, $patientName, $contact, $location, $bloodType]);
+            $patientId = (int) $pdo->lastInsertId();
+        } catch (Throwable $pe) {
+            $patientId = null;
         }
     }
+    if (!$patientId) {
+        $patientId = (int) ($pdo->query("SELECT id FROM patients LIMIT 1")->fetchColumn() ?: 1);
+    }
 
-    // Anti-spam Cooldown & Daily Limit Checks
+    // Generous limit for live testing & demonstrations (100 requests/day)
     if ($patientId) {
-        $todayStmt = $pdo->prepare("SELECT COUNT(*) FROM blood_requests WHERE patient_id = ? AND DATE(created_at) = CURRENT_DATE");
-        $todayStmt->execute([$patientId]);
-        $dailyCount = (int) $todayStmt->fetchColumn();
-        if ($dailyCount >= 3) {
-            http_response_code(429);
-            echo json_encode([
-                "success" => false,
-                "error" => "Daily limit reached. Naabot mo na ang limit na 3 blood requests kada araw para sa pasyenteng ito. Subukan muli bukas.",
-                "daily_limit_reached" => true
-            ]);
-            exit;
-        }
-
-        $recentStmt = $pdo->prepare("SELECT created_at FROM blood_requests WHERE patient_id = ? ORDER BY created_at DESC LIMIT 1");
-        $recentStmt->execute([$patientId]);
-        $recentRow = $recentStmt->fetch(PDO::FETCH_ASSOC);
-        $secDiff = ($recentRow && !empty($recentRow['created_at'])) ? (time() - strtotime($recentRow['created_at'])) : null;
-        if ($secDiff !== null && $secDiff >= 0 && $secDiff < 30) {
-            $remaining = 30 - (int)$secDiff;
-            http_response_code(429);
-            echo json_encode([
-                "success" => false,
-                "error" => "Bawal ang sabay-sabay na request. Maghintay ng {$remaining} segundo bago mag-submit muli.",
-                "cooldown_remaining" => $remaining
-            ]);
-            exit;
-        }
+        try {
+            $todayStmt = $pdo->prepare("SELECT COUNT(*) FROM blood_requests WHERE patient_id = ? AND created_at >= CURRENT_DATE");
+            $todayStmt->execute([$patientId]);
+            $dailyCount = (int) $todayStmt->fetchColumn();
+            if ($dailyCount >= 100) {
+                http_response_code(429);
+                echo json_encode([
+                    "success" => false,
+                    "error" => "Daily limit reached. Naabot mo na ang limit na blood requests kada araw para sa pasyenteng ito. Subukan muli bukas.",
+                    "daily_limit_reached" => true
+                ]);
+                exit;
+            }
+        } catch (Throwable $ignored) {}
     }
 
     $componentType = !empty($data['component_type']) ? trim((string)$data['component_type']) : 'Whole Blood';
@@ -1308,14 +1300,14 @@ if ($method === 'POST') {
             patient_dob, patient_age, patient_mrn, patient_sex, ward_room, clinical_indication,
             urgency_level, special_requirements, requester_name, requester_relationship, requester_contact, requester_email,
             physician_name, physician_license_no, physician_signature, physician_signed_at,
-            document_status, final_status
+            document_status, final_status, target_hospital_id
         ) VALUES (
             ?, ?, ?, ?, ?, ?, ?, ?, ?,
             'Pending', ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?,
             ?, ?, ?, ?,
-            'Pending', 'Pending'
+            'Pending', 'Pending', ?
         )");
         $stmt->execute([
             $patientId,
@@ -1347,7 +1339,8 @@ if ($method === 'POST') {
             $physicianName,
             $physicianLicenseNo,
             $physicianSignature,
-            $physicianSignedAt
+            $physicianSignedAt,
+            $targetHospitalId
         ]);
 
         $insertedId = (int) $pdo->lastInsertId();

@@ -49,8 +49,19 @@ function db(bool $withDatabase = true): PDO
         return $connections[$key];
     } catch (PDOException $error) {
         appLog('Database connection failed', $error);
-        $friendly = 'Cannot connect to MySQL. Start MySQL in XAMPP and check php/config.php.';
-        if (defined('BL_API')) jsonResponse(['ok' => false, 'message' => $friendly], 500);
+        $friendly = 'Cannot connect to Database. Please try again in a few moments.';
+        $isApi = defined('BL_API')
+            || (strpos($_SERVER['REQUEST_URI'] ?? '', '/api/') !== false)
+            || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
+            || (isset($_SERVER['CONTENT_TYPE']) && strpos($_SERVER['CONTENT_TYPE'], 'application/json') !== false);
+        if ($isApi) {
+            if (!headers_sent()) {
+                http_response_code(500);
+                header('Content-Type: application/json; charset=UTF-8');
+            }
+            echo json_encode(['ok' => false, 'success' => false, 'message' => $friendly, 'error' => $friendly]);
+            exit;
+        }
         http_response_code(500);
         header('Content-Type: text/html; charset=utf-8');
         echo '<!doctype html><meta charset="utf-8"><title>BloodLink</title>'

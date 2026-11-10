@@ -65,12 +65,21 @@ requireRoles(['superadmin']);
 /* -------------------------------------------------- 2. LIST ALL VERSIONS */
 if ($first === '' && $method === 'GET') {
     $db = db();
+    $isPg = ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql');
+    $dateExpr = $isPg ? "TO_CHAR(a.created_at, 'Mon DD, YYYY HH12:MI AM')" : "DATE_FORMAT(a.created_at, '%b %d, %Y %h:%i %p')";
     $stmt = $db->query(
-        "SELECT a.*, DATE_FORMAT(a.created_at, '%b %d, %Y %h:%i %p') AS formatted_date
+        "SELECT a.*, $dateExpr AS formatted_date
          FROM app_versions a
          ORDER BY a.version_code DESC, a.id DESC"
     );
     $versions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($versions as &$v) {
+        if (empty($v['formatted_date']) && !empty($v['created_at'])) {
+            $v['formatted_date'] = date('M d, Y h:i A', strtotime((string)$v['created_at']));
+        }
+    }
+    unset($v);
 
     jsonResponse([
         'ok' => true,

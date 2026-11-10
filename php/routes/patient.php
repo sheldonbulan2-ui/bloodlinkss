@@ -159,14 +159,14 @@ if ($action === 'requests' && $method === 'POST') {
         ], 429);
     }
 
-    // 2. Daily Limit Check (Limitado sa 3 request batches bawat araw)
-    $dailyStmt = db()->prepare("SELECT COUNT(DISTINCT COALESCE(group_id, id)) FROM blood_requests WHERE patient_id = ? AND DATE(created_at) = CURRENT_DATE");
+    // 2. Daily Limit Check (Generous 100 requests per day for active testing & operations)
+    $dailyStmt = db()->prepare("SELECT COUNT(DISTINCT COALESCE(group_id, id)) FROM blood_requests WHERE patient_id = ? AND created_at >= CURRENT_DATE");
     $dailyStmt->execute([$patient['id']]);
     $dailyCount = (int) $dailyStmt->fetchColumn();
-    if ($dailyCount >= 3) {
+    if ($dailyCount >= 100) {
         jsonResponse([
             'ok' => false,
-            'message' => "Naabot na ang limitasyon ng request para sa araw na ito (Maximum 3 requests kada araw). Mangyaring maghintay bukas o makipag-ugnayan sa ospital.",
+            'message' => "Naabot na ang limitasyon ng request para sa araw na ito. Mangyaring makipag-ugnayan sa ospital.",
             'daily_limit_reached' => true
         ], 429);
     }

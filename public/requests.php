@@ -666,7 +666,7 @@
             <td>
               <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
                 <button class="btn slim ghost" style="color:#1e40af; border-color:#bfdbfe; font-weight:700;" onclick="openSectionFModal(${r.id})">📋 Section F Review</button>
-                ${['Pending', 'Processing', 'Needs Correction', 'Verified'].includes(r.status) ? `
+                ${['Pending', 'Processing', 'Needs Correction', 'Verified'].includes(r.status) && Shell.role === 'staff' ? `
                   <button class="btn slim green" style="background:#059669; color:#fff; font-weight:700; border:none; padding:3px 9px;" onclick="fulfillModal(${r.id}, '${r.blood_type}', ${r.units_needed}, '${r.component_type || 'Whole Blood'}')">💉 Fulfill</button>
                 ` : ''}
               </div>
