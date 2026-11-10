@@ -12,44 +12,46 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
-    border: 1px solid #fee2e2;
-    border-radius: 14px;
-    padding: 20px 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 10px rgba(192, 21, 46, 0.05);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
   .ann-hero h1 {
     font-size: 22px;
     font-weight: 800;
-    color: #111827;
+    color: #0f172a;
     margin: 0 0 4px 0;
   }
   .ann-hero p {
     margin: 0;
     font-size: 13.5px;
-    color: #4b5563;
+    color: #64748b;
   }
   .ann-card {
     background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 22px;
     margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     transition: all 0.2s ease;
     position: relative;
   }
   .ann-card.urgent {
     border-left: 5px solid #dc2626;
-    background: #fffafa;
+    background: #fff5f5;
   }
   .ann-card.normal {
-    border-left: 5px solid #2563eb;
+    border-left: 5px solid #0284c7;
+    background: #f8fafc;
   }
   .ann-card:hover {
     border-color: #cbd5e1;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
   }
   .ann-header {
     display: flex;
@@ -62,7 +64,7 @@
   .ann-title {
     font-size: 17px;
     font-weight: 800;
-    color: #111827;
+    color: #0f172a;
     margin: 0 0 4px 0;
     display: flex;
     align-items: center;
@@ -70,7 +72,7 @@
   }
   .ann-meta {
     font-size: 12px;
-    color: #6b7280;
+    color: #64748b;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -78,7 +80,7 @@
   }
   .ann-body {
     font-size: 14px;
-    color: #374151;
+    color: #334155;
     line-height: 1.6;
     margin: 12px 0 14px 0;
     white-space: pre-wrap;
@@ -103,9 +105,9 @@
     border-radius: 6px;
   }
   .badge-audience {
-    background: #f3f4f6;
-    color: #374151;
-    border: 1px solid #e5e7eb;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
     font-size: 11px;
     font-weight: 700;
     padding: 3px 8px;
@@ -113,20 +115,28 @@
   }
   .modal-form label {
     display: block;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
-    color: #374151;
+    color: #334155;
     margin-bottom: 6px;
   }
   .modal-form input, .modal-form select, .modal-form textarea {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid #cbd5e1;
+    border: 1.5px solid #cbd5e1;
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 10px 14px;
     font-size: 14px;
     margin-bottom: 14px;
     font-family: inherit;
+    background: #ffffff;
+    color: #0f172a;
+  }
+  .modal-form input:focus, .modal-form select:focus, .modal-form textarea:focus {
+    border-color: #c0152e;
+    box-shadow: 0 0 0 3px rgba(192, 21, 46, 0.12);
+    background: #ffffff;
+    outline: none;
   }
   .modal-form textarea {
     min-height: 110px;

@@ -79,14 +79,14 @@ const BloodMap = {
       if (highlightType && (!blood[highlightType] || Number(blood[highlightType]) <= 0)) continue;
 
       const rows = validEntries
-        .map(([t, u]) => `<div style="display:flex;justify-content:space-between;padding:2px 0;"><span><b>${UI.esc(t)}</b></span><span style="color:#c0152e;font-weight:700;">${u} unit(s)</span></div>`).join('');
+        .map(([t, u]) => `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);"><span><b>${UI.esc(t)}</b></span><span style="color:#fda4af;font-weight:700;">${u} unit(s)</span></div>`).join('');
 
       const countLabel = highlightType ? `${highlightType}: ${blood[highlightType] || 0} unit(s)` : `${total} units avail.`;
       const icon = L.divIcon({
         className: '',
-        html: `<div style="background:${highlightType ? '#c0152e' : '#8f0f22'};color:#fff;
-          padding:5px 10px;border-radius:14px;border:2px solid #fff;
-          box-shadow:0 3px 8px rgba(0,0,0,.35);font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;">
+        html: `<div style="background:${highlightType ? '#e11d48' : '#9f1239'};color:#fff;
+          padding:5px 12px;border-radius:16px;border:1.5px solid rgba(255,255,255,0.7);
+          box-shadow:0 0 15px rgba(225,29,72,0.45);font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;">
           🏥 ${UI.esc(countLabel)}</div>`,
         iconSize: [null, 28], iconAnchor: [45, 26]
       });
@@ -97,38 +97,38 @@ const BloodMap = {
       let popupBtns = '';
       if (role === 'patient') {
         popupBtns = `
-          <a href="requests.php?location=${locNameEnc}&location_id=${loc.location_id}" style="display:block; text-align:center; padding:7px 10px; font-size:12px; font-weight:700; color:#fff; background:#c0152e; border-radius:6px; text-decoration:none;">
+          <a href="requests.php?location=${locNameEnc}&location_id=${loc.location_id}" style="display:block; text-align:center; padding:8px 12px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(135deg, #e11d48, #9f1239); border-radius:8px; text-decoration:none; box-shadow:0 0 10px rgba(225,29,72,0.3);">
             🚑 Request Blood from this Hospital
           </a>`;
       } else if (role === 'donor') {
         popupBtns = `
-          <a href="donate.php?location=${locNameEnc}&location_id=${loc.location_id}" style="display:block; text-align:center; padding:7px 10px; font-size:12px; font-weight:700; color:#fff; background:#15803d; border-radius:6px; text-decoration:none;">
+          <a href="donate.php?location=${locNameEnc}&location_id=${loc.location_id}" style="display:block; text-align:center; padding:8px 12px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(135deg, #059669, #047857); border-radius:8px; text-decoration:none; box-shadow:0 0 10px rgba(16,185,129,0.3);">
             🩸 Donate Blood at this Hospital
           </a>`;
       } else if (role) {
         popupBtns = `
-          <a href="requests.php?location=${locNameEnc}&location_id=${loc.location_id}" style="display:block; text-align:center; padding:6px 10px; font-size:11px; font-weight:700; color:#fff; background:#c0152e; border-radius:6px; text-decoration:none;">
+          <a href="requests.php?location=${locNameEnc}&location_id=${loc.location_id}" style="display:block; text-align:center; padding:7px 12px; font-size:11.5px; font-weight:700; color:#fff; background:linear-gradient(135deg, #e11d48, #9f1239); border-radius:8px; text-decoration:none;">
             📋 View Hospital Requests
           </a>`;
       } else {
         popupBtns = `
-          <a href="login.php?location_id=${loc.location_id}&location_name=${locNameEnc}" style="display:block; text-align:center; padding:7px 10px; font-size:11px; font-weight:700; color:#fff; background:#c0152e; border-radius:6px; text-decoration:none;">
+          <a href="login.php?location_id=${loc.location_id}&location_name=${locNameEnc}" style="display:block; text-align:center; padding:8px 12px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(135deg, #e11d48, #9f1239); border-radius:8px; text-decoration:none;">
             🔑 Log In (Request / Donate)
           </a>
-          <a href="register.php?location_id=${loc.location_id}&location_name=${locNameEnc}" style="display:block; text-align:center; padding:6px 10px; font-size:11px; font-weight:600; color:#1f2937; background:#f3f4f6; border:1px solid #d1d5db; border-radius:6px; text-decoration:none;">
+          <a href="register.php?location_id=${loc.location_id}&location_name=${locNameEnc}" style="display:block; text-align:center; padding:7px 12px; font-size:11.5px; font-weight:600; color:#f1f5f9; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:8px; text-decoration:none;">
             📝 Create New Account
           </a>`;
       }
 
       marker.bindPopup(`
-        <div style="min-width:230px; font-family:sans-serif; line-height:1.4;">
-          <div style="font-weight:700; font-size:14px; color:#111827; margin-bottom:2px;">🏥 ${UI.esc(loc.location_name)}</div>
-          <div style="font-size:11px; color:#6b7280; margin-bottom:8px;">📍 ${UI.esc(loc.address)}<br>📞 ${UI.esc(loc.contact_number || '-')}</div>
-          <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:6px 8px; margin-bottom:10px; max-height:120px; overflow-y:auto; font-size:12px;">
-            <div style="font-size:11px; font-weight:600; color:#4b5563; margin-bottom:4px; border-bottom:1px solid #eee; padding-bottom:2px;">Available Stock (100% Verified):</div>
+        <div style="min-width:240px; font-family:inherit; line-height:1.45; color:#f8fafc;">
+          <div style="font-weight:800; font-size:14.5px; color:#ffffff; margin-bottom:3px;">🏥 ${UI.esc(loc.location_name)}</div>
+          <div style="font-size:11.5px; color:#94a3b8; margin-bottom:10px;">📍 ${UI.esc(loc.address)}<br>📞 ${UI.esc(loc.contact_number || '-')}</div>
+          <div style="background:rgba(0,0,0,0.4); border:1px solid rgba(225,29,72,0.25); border-radius:8px; padding:8px 10px; margin-bottom:12px; max-height:120px; overflow-y:auto; font-size:12px;">
+            <div style="font-size:11px; font-weight:700; color:#fda4af; margin-bottom:6px; border-bottom:1px solid rgba(225,29,72,0.2); padding-bottom:3px; text-transform:uppercase; letter-spacing:0.4px;">Available Stock (100% Verified):</div>
             ${rows}
           </div>
-          <div style="display:flex; flex-direction:column; gap:5px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
             ${popupBtns}
           </div>
         </div>`);

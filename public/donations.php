@@ -44,7 +44,7 @@
           ${dd.donors.map(d => `<option value="${d.id}">${d.donor_code} — ${UI.esc(d.last_name)}, ${UI.esc(d.first_name)}</option>`).join('')}</select>
         <button class="btn slim ghost" id="refresh-btn">Refresh</button>
         <span class="spacer"></span>
-        <span id="don-count-summary" style="font-size:12.5px; font-weight:700; color:#4b5563;"></span>
+        <span id="don-count-summary" style="font-size:12.5px; font-weight:700; color:#94a3b8;"></span>
       </div>
       <div id="don-table"></div>
       <p class="muted small" style="margin-top:10px">Only <b>Verified</b> donations are added to blood inventory. Marking <b>Complete</b> confirms successful extraction and begins donor 56-day recovery.</p>
@@ -60,11 +60,11 @@
     const tCount = allList.length;
 
     const tabs = [
-      { key: '', label: 'All Donations', count: tCount, color: '#374151', bg: '#f3f4f6' },
-      { key: 'Pending', label: '⏳ Pending (To Verify)', count: pCount, color: '#92400e', bg: '#fef3c7', alert: pCount > 0 },
-      { key: 'Verified', label: '✅ Verified', count: vCount, color: '#166534', bg: '#dcfce7' },
-      { key: 'Completed', label: '💉 Completed', count: cCount, color: '#1e40af', bg: '#dbeafe' },
-      { key: 'Rejected', label: '❌ Rejected', count: rCount, color: '#991b1b', bg: '#fee2e2' },
+      { key: '', label: 'All Donations', count: tCount, color: '#f1f5f9', bg: 'rgba(255,255,255,0.06)', border: 'rgba(255,255,255,0.12)' },
+      { key: 'Pending', label: '⏳ Pending (To Verify)', count: pCount, color: '#fbbf24', bg: 'rgba(245,158,11,0.15)', border: 'rgba(245,158,11,0.35)', alert: pCount > 0 },
+      { key: 'Verified', label: '✅ Verified', count: vCount, color: '#34d399', bg: 'rgba(16,185,129,0.15)', border: 'rgba(16,185,129,0.35)' },
+      { key: 'Completed', label: '💉 Completed', count: cCount, color: '#7dd3fc', bg: 'rgba(56,189,248,0.15)', border: 'rgba(56,189,248,0.35)' },
+      { key: 'Rejected', label: '❌ Rejected', count: rCount, color: '#fda4af', bg: 'rgba(225,29,72,0.18)', border: 'rgba(225,29,72,0.4)' },
     ];
 
     const container = document.getElementById('status-tabs');
@@ -74,15 +74,16 @@
       return `
         <button type="button" class="btn slim" style="
           border-radius:20px; font-size:12.5px; font-weight:${active ? '800' : '600'};
-          background:${active ? (t.key === 'Pending' ? '#b45309' : (t.key === '' ? '#1f2937' : '#c0152e')) : t.bg};
+          background:${active ? 'linear-gradient(135deg, #e11d48, #9f1239)' : t.bg};
           color:${active ? '#ffffff' : t.color};
-          border:1px solid ${active ? 'transparent' : 'rgba(0,0,0,0.08)'};
+          border:1px solid ${active ? '#f43f5e' : t.border};
+          box-shadow:${active ? '0 0 14px rgba(225,29,72,0.45)' : 'none'};
           padding:6px 14px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
           transition:all 0.15s ease;
         " onclick="setStatusTab('${t.key}')">
           <span>${t.label}</span>
           <span style="
-            background:${active ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.08)'};
+            background:${active ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.35)'};
             color:${active ? '#ffffff' : t.color};
             padding:1px 6px; border-radius:10px; font-size:11px; font-weight:800;
           ">${t.count}</span>
@@ -125,9 +126,9 @@
         <td class="small">${UI.esc(d.donation_location)}</td>
         <td>${
           d.status === 'Cancelled' && d.approved_by_hospital ?
-            `<span class="badge" style="background:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; font-weight:600; white-space:nowrap;">✅ Verified by ${UI.esc(d.approved_by_hospital)}</span>` :
+            `<span class="badge" style="background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.35); font-weight:700; white-space:nowrap;">✅ Verified by ${UI.esc(d.approved_by_hospital)}</span>` :
           (d.status === 'Verified' || d.status === 'Approved') && d.approved_by_hospital ?
-            `${UI.statusBadge(d.status)}<br><small style="color:#1565c0; font-weight:600; font-size:11px;">By ${UI.esc(d.approved_by_hospital)}</small>` :
+            `${UI.statusBadge(d.status)}<br><small style="color:#7dd3fc; font-weight:600; font-size:11px;">By ${UI.esc(d.approved_by_hospital)}</small>` :
           UI.statusBadge(d.status)
         }</td>
         <td class="muted small">${UI.esc(d.recorded_by_user || '-')}</td>

@@ -14,10 +14,10 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 24px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(225, 29, 72, 0.25);
+    border-radius: 14px;
+    padding: 12px 18px;
     position: relative;
   }
   .wizard-step {
@@ -26,7 +26,7 @@
     gap: 8px;
     font-size: 13px;
     font-weight: 700;
-    color: #9ca3af;
+    color: #94a3b8;
     position: relative;
     z-index: 2;
     transition: all 0.25s ease;
@@ -35,8 +35,8 @@
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    background: #e5e7eb;
-    color: #6b7280;
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -45,24 +45,24 @@
     transition: all 0.25s ease;
   }
   .wizard-step.active {
-    color: #c0152e;
+    color: #fda4af;
   }
   .wizard-step.active .num {
-    background: #c0152e;
+    background: #e11d48;
     color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(192, 21, 46, 0.2);
+    box-shadow: 0 0 12px rgba(225, 29, 72, 0.6);
   }
   .wizard-step.completed {
-    color: #15803d;
+    color: #34d399;
   }
   .wizard-step.completed .num {
-    background: #16a34a;
+    background: #059669;
     color: #ffffff;
   }
   .wizard-sep {
     flex: 1;
     height: 2px;
-    background: #e5e7eb;
+    background: rgba(225, 29, 72, 0.2);
     margin: 0 10px;
   }
 
@@ -80,27 +80,28 @@
   }
 
   .reg-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
+    background: rgba(14, 2, 5, 0.65);
+    border: 1px solid rgba(225, 29, 72, 0.2);
+    border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     margin-bottom: 20px;
+    color: #f8fafc;
   }
   .reg-card-header {
     margin-bottom: 18px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid rgba(225, 29, 72, 0.2);
   }
   .reg-card-header h2 {
     font-size: 18px;
     font-weight: 800;
-    color: #111827;
+    color: #ffffff;
     margin: 0 0 4px 0;
   }
   .reg-card-header p {
     font-size: 13px;
-    color: #6b7280;
+    color: #94a3b8;
     margin: 0;
   }
 
@@ -113,8 +114,8 @@
   }
 
   .checklist-box {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(225, 29, 72, 0.2);
     border-radius: 10px;
     padding: 14px 16px;
     margin-top: 14px;
@@ -122,7 +123,7 @@
   .checklist-title {
     font-size: 12px;
     font-weight: 700;
-    color: #4b5563;
+    color: #fda4af;
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -132,7 +133,7 @@
     align-items: center;
     gap: 8px;
     font-size: 12.5px;
-    color: #6b7280;
+    color: #94a3b8;
     margin-bottom: 6px;
     transition: all 0.2s ease;
   }
@@ -146,23 +147,23 @@
     width: 17px;
     height: 17px;
     border-radius: 50%;
-    background: #e5e7eb;
-    color: #9ca3af;
+    background: rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
     font-size: 10px;
     font-weight: 800;
     transition: all 0.2s ease;
   }
   .check-item.valid {
-    color: #15803d;
+    color: #34d399;
     font-weight: 600;
   }
   .check-item.valid .check-icon {
-    background: #22c55e;
+    background: #059669;
     color: #ffffff;
   }
   .badge-optional {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
     font-size: 11px;
     font-weight: 600;
     padding: 2px 7px;
@@ -170,9 +171,9 @@
     margin-left: 4px;
   }
   .address-preview {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    color: #1e40af;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #7dd3fc;
     padding: 10px 14px;
     border-radius: 8px;
     font-size: 12.5px;
@@ -207,9 +208,9 @@
       </div>
     </div>
 
-    <div id="hospital-banner" style="display:none; background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; border-radius:8px; padding:10px 14px; margin-bottom:16px; font-size:13px; text-align:left;">
-      🏥 Selected Center: <b id="hospital-name-text"></b><br>
-      <span style="font-size:12px; color:#3b82f6;">Register below to request blood or schedule a donation with this center.</span>
+    <div id="hospital-banner" style="display:none; background:rgba(56, 189, 248, 0.1); border:1px solid rgba(56, 189, 248, 0.3); color:#7dd3fc; border-radius:10px; padding:12px 16px; margin-bottom:16px; font-size:13px; text-align:left;">
+      🏥 Selected Center: <b id="hospital-name-text" style="color:#ffffff;"></b><br>
+      <span style="font-size:12px; color:#38bdf8;">Register below to request blood or schedule a donation with this center.</span>
     </div>
 
     <form id="reg-form">

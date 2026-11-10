@@ -25,7 +25,7 @@
     left: 20px;
     right: 20px;
     height: 2px;
-    background: #e5e7eb;
+    background: rgba(225, 29, 72, 0.25);
     z-index: 1;
   }
   .step-node {
@@ -39,9 +39,9 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: #fff;
-    border: 2px solid #d1d5db;
-    color: #6b7280;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    color: #64748b;
     font-size: 13px;
     font-weight: 700;
     display: flex;
@@ -50,28 +50,28 @@
     transition: all 0.25s ease;
   }
   .step-node.active .step-circle {
-    border-color: #b00020;
-    background: #b00020;
+    border-color: #c0152e;
+    background: #c0152e;
     color: #fff;
-    box-shadow: 0 0 0 4px #fee2e2;
+    box-shadow: 0 0 10px rgba(192, 21, 46, 0.3);
   }
   .step-node.completed .step-circle {
-    border-color: #10b981;
-    background: #10b981;
+    border-color: #16a34a;
+    background: #16a34a;
     color: #fff;
   }
   .step-label {
     font-size: 11px;
-    color: #6b7280;
+    color: #64748b;
     font-weight: 600;
     margin-top: 6px;
   }
   .step-node.active .step-label {
-    color: #b00020;
+    color: #c0152e;
     font-weight: 700;
   }
   .step-node.completed .step-label {
-    color: #10b981;
+    color: #16a34a;
   }
 
   /* OTP Boxes */
@@ -87,38 +87,39 @@
     text-align: center;
     font-size: 22px;
     font-weight: 700;
-    border: 2px solid #d9c2c6;
+    border: 1.5px solid #cbd5e1;
     border-radius: 10px;
-    background: #fff;
-    color: #b00020;
+    background: #ffffff;
+    color: #0f172a;
     transition: all 0.2s;
   }
   .otp-inputs input:focus {
     outline: none;
-    border-color: #b00020;
-    box-shadow: 0 0 0 3px #fdeff1;
+    border-color: #c0152e;
+    box-shadow: 0 0 0 3px rgba(192, 21, 46, 0.15);
+    background: #ffffff;
   }
   .otp-meta {
     text-align: center;
-    color: #666;
+    color: #64748b;
     font-size: 13px;
     margin: 8px 0;
   }
   .otp-timer {
     font-weight: 700;
-    color: #b00020;
+    color: #c0152e;
   }
   .link-btn {
     background: none;
     border: none;
-    color: #b00020;
+    color: #fda4af;
     font-weight: 600;
     cursor: pointer;
     font-size: 13px;
     padding: 0;
   }
   .link-btn[disabled] {
-    color: #aaa;
+    color: #64748b;
     cursor: not-allowed;
   }
 
@@ -126,9 +127,9 @@
   #step-2, #step-3 { display: none; }
 
   .success-banner {
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
-    color: #065f46;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #34d399;
     padding: 12px 14px;
     border-radius: 10px;
     font-size: 13px;

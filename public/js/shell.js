@@ -260,7 +260,7 @@ const Shell = {
     `).join('');
 
     const hospBadgeHtml = Shell.hospital && Shell.hospital.name ? `
-      <span class="chip" style="background:#f1f5f9; color:#334155; font-size:11px; font-weight:700; border:1px solid #cbd5e1; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+      <span class="chip" style="background:rgba(225, 29, 72, 0.12); color:#fda4af; font-size:11px; font-weight:700; border:1px solid rgba(225, 29, 72, 0.3); max-width:240px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
         🏥 ${UI.esc(Shell.hospital.name)}
       </span>
     ` : '';

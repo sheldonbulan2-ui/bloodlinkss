@@ -68,10 +68,12 @@ $docLic = $req['physician_license_no'] ?? '';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #fff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 14px 22px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    color: #0f172a;
   }
   .form-container {
     max-width: 820px;

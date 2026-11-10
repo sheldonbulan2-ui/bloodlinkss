@@ -12,12 +12,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
-    border: 1px solid #bbf7d0;
-    border-radius: 14px;
-    padding: 20px 24px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 22px 26px;
     margin-bottom: 22px;
-    box-shadow: 0 2px 10px rgba(22, 101, 52, 0.04);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
   .ver-hero h1 {
     font-size: 21px;
@@ -28,20 +28,20 @@
   .ver-hero p {
     margin: 0;
     font-size: 13.5px;
-    color: #475569;
+    color: #64748b;
   }
   .release-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     transition: all 0.2s ease;
   }
   .release-card.active-rel {
     border-left: 5px solid #16a34a;
-    background: #fcfdfd;
+    background: #f0fdf4;
   }
   .release-card.inactive-rel {
     border-left: 5px solid #cbd5e1;
@@ -66,17 +66,33 @@
   .notes-box {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 12px 14px;
+    border-radius: 10px;
+    padding: 14px 16px;
     font-size: 13.5px;
     color: #334155;
     line-height: 1.55;
-    margin: 10px 0;
+    margin: 12px 0;
     white-space: pre-wrap;
   }
   .release-meta {
     font-size: 12px;
     color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    color: #f1f5f9;
+    line-height: 1.55;
+    margin: 12px 0;
+    white-space: pre-wrap;
+  }
+  .release-meta {
+    font-size: 12px;
+    color: #94a3b8;
     display: flex;
     align-items: center;
     gap: 12px;

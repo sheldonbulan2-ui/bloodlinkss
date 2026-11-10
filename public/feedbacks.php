@@ -12,17 +12,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
-    border: 1px solid #fef3c7;
-    border-radius: 14px;
-    padding: 20px 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 10px rgba(217, 119, 6, 0.05);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
   .fb-hero h1 {
     font-size: 21px;
     font-weight: 800;
-    color: #1e293b;
+    color: #0f172a;
     margin: 0 0 4px 0;
   }
   .fb-hero p {
@@ -33,18 +33,19 @@
   .fb-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     transition: all 0.2s ease;
   }
   .fb-card.status-new {
-    border-left: 5px solid #f59e0b;
-    background: #fffdfa;
+    border-left: 5px solid #d97706;
+    background: #fffbeb;
   }
   .fb-card.status-reviewed {
-    border-left: 5px solid #10b981;
+    border-left: 5px solid #16a34a;
+    background: #f0fdf4;
   }
   .star-rating {
     color: #f59e0b;
@@ -54,9 +55,9 @@
   .fb-quote {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin: 10px 0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 12px 0;
     font-size: 13.5px;
     color: #334155;
     line-height: 1.5;
@@ -87,8 +88,8 @@
 
     <!-- Submit Feedback Form for Donors / Patients -->
     ${['donor', 'patient'].includes(Shell.role) ? `
-      <div class="card" style="margin-bottom:20px; border:1px solid #fed7aa; background:#fffdfa;">
-        <h2 style="font-size:16px; margin-top:0; color:#c2410c;">💬 Send Feedback &amp; Suggestions to System Admins</h2>
+      <div class="card" style="margin-bottom:20px; border:1px solid #e2e8f0; background:#ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h2 style="font-size:16px; margin-top:0; color:#d97706;">💬 Send Feedback &amp; Suggestions to System Admins</h2>
         <p class="muted small" style="margin-bottom:14px;">How was your blood donation or request experience? Your ratings and suggestions help us improve BloodLink.</p>
         <form id="submit-feedback-form">
           <div class="grid cols-2" style="gap:12px; margin-bottom:12px;">

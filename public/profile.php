@@ -182,14 +182,14 @@
   function promptPasswordOtp() {
     return new Promise((resolve) => {
       const overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999';
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
       overlay.innerHTML = `
-        <div style="background:#fff;border-radius:14px;padding:24px;max-width:360px;width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25)">
-          <h3 style="margin:0 0 6px;color:#b00020">Confirm Password Change</h3>
-          <p style="color:#666;font-size:14px;margin:0 0 16px">Enter the 6-digit code we emailed you.</p>
+        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;padding:28px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(15,23,42,0.25);color:#0f172a;">
+          <h3 style="margin:0 0 6px;color:#0f172a;font-size:18px;font-weight:800;">Confirm Password Change</h3>
+          <p style="color:#64748b;font-size:13.5px;margin:0 0 18px">Enter the 6-digit code we emailed you.</p>
           <input id="pw-otp" inputmode="numeric" maxlength="6" placeholder="000000"
-            style="width:100%;text-align:center;letter-spacing:8px;font-size:24px;font-weight:700;padding:12px;border:1px solid #d9c2c6;border-radius:10px;color:#b00020">
-          <div style="display:flex;gap:10px;margin-top:16px">
+            style="width:100%;text-align:center;letter-spacing:8px;font-size:24px;font-weight:700;padding:12px;border:1.5px solid #cbd5e1;border-radius:10px;background:#ffffff;color:#0f172a;box-sizing:border-box;">
+          <div style="display:flex;gap:10px;margin-top:20px">
             <button id="pw-otp-cancel" class="btn ghost" style="flex:1">Cancel</button>
             <button id="pw-otp-confirm" class="btn" style="flex:1">Confirm</button>
           </div>

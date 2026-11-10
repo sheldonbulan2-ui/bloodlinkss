@@ -16,9 +16,9 @@
     gap: 8px;
     font-size: 13.5px;
     font-weight: 800;
-    color: #1e293b;
-    padding-bottom: 6px;
-    margin-bottom: 10px;
+    color: #0f172a;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
     border-bottom: 2px solid #e2e8f0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -26,9 +26,9 @@
   .form-section-card {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
   }
   .pinpoint-hint {
     font-size: 11.5px;

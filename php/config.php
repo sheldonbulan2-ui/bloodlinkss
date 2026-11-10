@@ -305,7 +305,7 @@ function securityHeaders(): void
         . "default-src 'self'; "
         . "script-src 'self' 'unsafe-inline' https://unpkg.com; "
         . "style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; "
-        . "img-src 'self' data: https://*.tile.openstreetmap.org https://unpkg.com; "
+        . "img-src 'self' data: https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com; "
         . "font-src 'self' data: https://fonts.gstatic.com; "
         . "connect-src 'self'; "
         . "object-src 'none'; "

@@ -10,12 +10,12 @@
 <style>
   .otp-inputs{display:flex;gap:10px;justify-content:center;margin:22px 0}
   .otp-inputs input{width:46px;height:56px;text-align:center;font-size:24px;font-weight:700;
-    border:1px solid #d9c2c6;border-radius:10px;background:#fff;color:#b00020}
-  .otp-inputs input:focus{outline:none;border-color:#b00020;box-shadow:0 0 0 3px #fdeff1}
-  .otp-meta{text-align:center;color:#666;font-size:14px;margin:6px 0}
-  .otp-timer{font-weight:700;color:#b00020}
-  .link-btn{background:none;border:none;color:#b00020;font-weight:600;cursor:pointer;font-size:14px}
-  .link-btn[disabled]{color:#aaa;cursor:not-allowed}
+    border:1.5px solid #cbd5e1;border-radius:10px;background:#ffffff;color:#0f172a}
+  .otp-inputs input:focus{outline:none;border-color:#c0152e;box-shadow:0 0 0 3px rgba(192, 21, 46, 0.15);background:#ffffff}
+  .otp-meta{text-align:center;color:#64748b;font-size:14px;margin:6px 0}
+  .otp-timer{font-weight:700;color:#c0152e}
+  .link-btn{background:none;border:none;color:#c0152e;font-weight:600;cursor:pointer;font-size:14px}
+  .link-btn[disabled]{color:#64748b;cursor:not-allowed}
 </style>
 </head>
 <body>

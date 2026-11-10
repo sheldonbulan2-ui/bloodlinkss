@@ -11,18 +11,18 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   /* =========================================================================
-     CLEAN ENTERPRISE MEDICAL DASHBOARD
+     LIGHT HEALTHCARE SAAS ENTERPRISE DASHBOARD (RED + WHITE + BLACK)
      ========================================================================= */
   .dash-hero-container {
     background: #ffffff;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 22px 26px;
+    padding: 24px 28px;
     margin-bottom: 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
   }
@@ -36,11 +36,14 @@
     background: #c0152e;
   }
   .dash-hero-title {
-    font-size: 21px;
+    font-size: 22px;
     font-weight: 800;
     color: #0f172a;
     margin: 0 0 6px 0;
     letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   .dash-hero-subtitle {
     margin: 0;
@@ -66,10 +69,10 @@
   .kpi-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 18px 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-    transition: all 0.2s ease;
+    border-radius: 16px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -77,7 +80,7 @@
   }
   .kpi-card:hover {
     border-color: #cbd5e1;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
   }
   .kpi-header {
@@ -87,40 +90,41 @@
     margin-bottom: 12px;
   }
   .kpi-label {
-    font-size: 12.5px;
-    font-weight: 700;
+    font-size: 11.5px;
+    font-weight: 800;
     color: #64748b;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.7px;
   }
   .kpi-icon-wrap {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 19px;
   }
   .kpi-num {
-    font-size: 28px;
-    font-weight: 800;
+    font-size: 32px;
+    font-weight: 900;
     color: #0f172a;
     line-height: 1;
     margin-bottom: 6px;
+    letter-spacing: -0.5px;
   }
   .kpi-footer {
-    font-size: 11.5px;
-    color: #94a3b8;
+    font-size: 12px;
+    color: #64748b;
     display: flex;
     align-items: center;
     gap: 6px;
   }
 
-  .kpi-red .kpi-icon-wrap { background: #fef2f2; color: #dc2626; }
-  .kpi-amber .kpi-icon-wrap { background: #fffbeb; color: #d97706; }
-  .kpi-teal .kpi-icon-wrap { background: #ecfdf5; color: #059669; }
-  .kpi-navy .kpi-icon-wrap { background: #f1f5f9; color: #2563eb; }
+  .kpi-red .kpi-icon-wrap { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+  .kpi-amber .kpi-icon-wrap { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+  .kpi-teal .kpi-icon-wrap { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+  .kpi-navy .kpi-icon-wrap { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
 
   /* Section Header */
   .section-heading {
@@ -130,49 +134,52 @@
     margin-bottom: 14px;
   }
   .section-title {
-    font-size: 16px;
+    font-size: 16.5px;
     font-weight: 800;
     color: #0f172a;
     margin: 0;
     display: flex;
     align-items: center;
     gap: 8px;
+    letter-spacing: -0.2px;
   }
 
   /* 8-Blood-Type Inventory Matrix */
   .blood-matrix {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 22px;
   }
   .blood-cell {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 14px 10px;
+    border-radius: 14px;
+    padding: 16px 10px;
     text-align: center;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
   .blood-cell:hover {
-    border-color: #cbd5e1;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    border-color: #c0152e;
+    box-shadow: 0 4px 14px rgba(192, 21, 46, 0.15);
+    transform: translateY(-2px);
   }
   .blood-type-tag {
     font-size: 15px;
-    font-weight: 900;
-    color: #c0152e;
-    background: #fdf2f4;
-    border: 1px solid #fecdd3;
-    padding: 3px 8px;
+    font-weight: 800;
+    color: #ffffff;
+    background: #c0152e;
+    border: 1px solid #9f1239;
+    padding: 3px 10px;
     border-radius: 8px;
     display: inline-block;
     margin-bottom: 8px;
+    box-shadow: 0 1px 4px rgba(192, 21, 46, 0.25);
   }
   .blood-units-val {
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 22px;
+    font-weight: 900;
     color: #0f172a;
     line-height: 1.1;
   }
@@ -181,20 +188,34 @@
     color: #64748b;
     margin-top: 2px;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.5px;
   }
   .blood-status-pill {
-    font-size: 9.5px;
+    font-size: 10px;
     font-weight: 800;
-    padding: 2px 6px;
-    border-radius: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
     display: inline-block;
-    margin-top: 6px;
+    margin-top: 8px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
-  .status-optimal { background: #dcfce7; color: #166534; }
-  .status-low { background: #fef3c7; color: #92400e; }
-  .status-empty { background: #fee2e2; color: #991b1b; }
+  .status-optimal {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+  }
+  .status-low {
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+  }
+  .status-empty {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+  }
 
   /* Action Cards Grid */
   .action-hub {
@@ -206,66 +227,76 @@
   .action-tile {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 16px 12px;
+    border-radius: 14px;
+    padding: 18px 12px;
     text-align: center;
     text-decoration: none;
-    color: #1e293b;
+    color: #0f172a;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
   .action-tile:hover {
     border-color: #c0152e;
     color: #c0152e;
-    background: #fffafa;
+    background: #fff5f5;
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(192, 21, 46, 0.08);
+    box-shadow: 0 6px 18px rgba(192, 21, 46, 0.12);
   }
   .action-tile-icon {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     background: #f8fafc;
+    border: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 20px;
     transition: all 0.2s ease;
   }
   .action-tile:hover .action-tile-icon {
     background: #fee2e2;
+    border-color: #fca5a5;
   }
   .action-tile-text {
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 700;
     line-height: 1.25;
+    color: #1e293b;
   }
 
   /* Two Column Clean Desk */
   .desk-split {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    gap: 20px;
+    margin-bottom: 22px;
+  }
+  .desk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
     margin-bottom: 22px;
   }
   .desk-panel {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
   .desk-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
+    padding: 13px 0;
     border-bottom: 1px solid #f1f5f9;
+    color: #0f172a;
   }
   .desk-row:last-child {
     border-bottom: none;
@@ -280,20 +311,20 @@
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     .blood-matrix { grid-template-columns: repeat(4, 1fr); }
     .action-hub { grid-template-columns: repeat(3, 1fr); }
-    .desk-split { grid-template-columns: 1fr; }
+    .desk-split, .desk-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 600px) {
     .dash-hero-container {
       flex-direction: column;
       align-items: flex-start;
       gap: 12px;
-      padding: 16px;
+      padding: 18px 16px;
     }
     .dash-hero-badges { align-items: flex-start; }
     .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .blood-matrix { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .action-hub { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .desk-panel { padding: 16px; }
+    .desk-panel { padding: 18px 14px; }
   }
   @media (max-width: 390px) {
     .kpi-grid { grid-template-columns: 1fr; }
@@ -431,11 +462,11 @@
           <span style="font-size:12px; color:#64748b;">${d.users_inactive || 0} Inactive accounts</span>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:10px;">
-          <span class="chip" style="background:#fee2e2; color:#991b1b; font-weight:700;">🛡️ Superadmins: <b>${rc.superadmin || 1}</b></span>
-          <span class="chip" style="background:#f3e8ff; color:#6b21a8; font-weight:700;">👔 Admins: <b>${rc.admin || 0}</b></span>
-          <span class="chip" style="background:#dbeafe; color:#1e40af; font-weight:700;">🩺 Hospital Staff: <b>${rc.staff || 0}</b></span>
-          <span class="chip" style="background:#dcfce7; color:#166534; font-weight:700;">🩸 Blood Donors: <b>${rc.donor || 0}</b></span>
-          <span class="chip" style="background:#ffedd5; color:#9a3412; font-weight:700;">🚑 Patients: <b>${rc.patient || 0}</b></span>
+          <span class="chip" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; font-weight:700;">🛡️ Superadmins: <b>${rc.superadmin || 1}</b></span>
+          <span class="chip" style="background:#f3e8ff; color:#7e22ce; border:1px solid #e9d5ff; font-weight:700;">👔 Admins: <b>${rc.admin || 0}</b></span>
+          <span class="chip" style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; font-weight:700;">🩺 Hospital Staff: <b>${rc.staff || 0}</b></span>
+          <span class="chip" style="background:#ffe4e6; color:#be123c; border:1px solid #fecdd3; font-weight:700;">🩸 Blood Donors: <b>${rc.donor || 0}</b></span>
+          <span class="chip" style="background:#dcfce7; color:#15803d; border:1px solid #bbf7d0; font-weight:700;">🚑 Patients: <b>${rc.patient || 0}</b></span>
         </div>
       </div>
 
@@ -444,17 +475,17 @@
         <div class="desk-panel">
           <div class="section-heading">
             <h2 class="section-title" style="color:#15803d;">🔥 Top Adopted Features</h2>
-            <span class="badge" style="background:#dcfce7; color:#166534;">Most Active</span>
+            <span class="badge green">Most Active</span>
           </div>
           <div>
             ${(fs.most_used || []).map((f, i) => `
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700; margin-bottom:5px;">
-                  <span>${f.icon} #${i + 1} ${UI.esc(f.name)}</span>
+                  <span style="color:#0f172a;">${f.icon} #${i + 1} ${UI.esc(f.name)}</span>
                   <span style="color:#15803d;">${f.count} uses (${f.percentage}%)</span>
                 </div>
-                <div style="width:100%; height:7px; background:#f1f5f9; border-radius:4px; overflow:hidden;">
-                  <div style="height:100%; background:linear-gradient(90deg, #15803d, #22c55e); width:${f.percentage}%;"></div>
+                <div style="width:100%; height:7px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                  <div style="height:100%; background:#16a34a; width:${f.percentage}%;"></div>
                 </div>
               </div>
             `).join('') || '<p class="muted small">Gathering analytics...</p>'}
@@ -464,17 +495,17 @@
         <div class="desk-panel">
           <div class="section-heading">
             <h2 class="section-title" style="color:#b45309;">❄️ Low Engagement Features</h2>
-            <span class="badge" style="background:#fef3c7; color:#92400e;">Needs Promotion</span>
+            <span class="badge orange">Needs Promotion</span>
           </div>
           <div>
             ${(fs.least_used || []).map((f, i) => `
               <div style="margin-bottom:12px;">
                 <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700; margin-bottom:5px;">
-                  <span>${f.icon} ${UI.esc(f.name)}</span>
+                  <span style="color:#0f172a;">${f.icon} ${UI.esc(f.name)}</span>
                   <span style="color:#b45309;">${f.count} uses (${f.percentage}%)</span>
                 </div>
-                <div style="width:100%; height:7px; background:#f1f5f9; border-radius:4px; overflow:hidden;">
-                  <div style="height:100%; background:linear-gradient(90deg, #f59e0b, #fbbf24); width:${Math.max(f.percentage, 4)}%;"></div>
+                <div style="width:100%; height:7px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                  <div style="height:100%; background:#f59e0b; width:${Math.max(f.percentage, 4)}%;"></div>
                 </div>
               </div>
             `).join('') || '<p class="muted small">Gathering analytics...</p>'}
@@ -488,7 +519,7 @@
           <div class="section-heading">
             <h2 class="section-title">🗺️ Verified Partner Hospital Network</h2>
           </div>
-          <div id="dash-map" class="map-box" style="height:340px; border-radius:10px;"></div>
+          <div id="dash-map" class="map-box" style="height:340px; border-radius:12px;"></div>
         </div>
 
         <div class="desk-panel">
@@ -503,7 +534,7 @@
                   <div style="font-weight:700; font-size:13px; color:#0f172a;">${UI.esc(x.action)}</div>
                   <div style="font-size:12px; color:#64748b;">${UI.esc(x.description || '')}</div>
                 </div>
-                <span style="font-size:11px; color:#94a3b8; font-weight:600;">${UI.fmtDate(x.created_at)}</span>
+                <span style="font-size:11px; color:#64748b; font-weight:600;">${UI.fmtDate(x.created_at)}</span>
               </div>
             `).join('') || '<p class="muted small">No recent logs found.</p>'}
           </div>
@@ -794,10 +825,10 @@
   function renderRecentRequests(requests) {
     if (!requests || requests.length === 0) {
       return `
-        <div style="text-align:center; padding:28px 14px; color:#94a3b8;">
+        <div style="text-align:center; padding:28px 14px; color:#64748b;">
           <div style="font-size:26px; margin-bottom:6px;">📋</div>
-          <div style="font-weight:700; color:#475569; font-size:13.5px;">No Pending Requests</div>
-          <div style="font-size:12px;">All patient requisitions are currently fulfilled.</div>
+          <div style="font-weight:700; color:#0f172a; font-size:13.5px;">No Pending Requests</div>
+          <div style="font-size:12px; color:#64748b;">All patient requisitions are currently fulfilled.</div>
         </div>
       `;
     }
@@ -810,7 +841,7 @@
           </div>
           <div style="font-size:12px; color:#64748b; margin-top:2px;">
             ${r.units_needed} unit(s) ${UI.bloodChip(r.blood_type)} &bull; 
-            Priority: <b style="color:${(r.priority || '').toLowerCase() === 'urgent' ? '#dc2626' : '#2563eb'};">${UI.esc(r.priority || 'Normal')}</b>
+            Priority: <b style="color:${(r.priority || '').toLowerCase() === 'urgent' ? '#b91c1c' : '#0284c7'};">${UI.esc(r.priority || 'Normal')}</b>
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
@@ -824,10 +855,10 @@
   function renderRecentDonations(donations) {
     if (!donations || donations.length === 0) {
       return `
-        <div style="text-align:center; padding:28px 14px; color:#94a3b8;">
+        <div style="text-align:center; padding:28px 14px; color:#64748b;">
           <div style="font-size:26px; margin-bottom:6px;">🩸</div>
-          <div style="font-weight:700; color:#475569; font-size:13.5px;">No Pending Donations</div>
-          <div style="font-size:12px;">Incoming donor queue is clear.</div>
+          <div style="font-weight:700; color:#0f172a; font-size:13.5px;">No Pending Donations</div>
+          <div style="font-size:12px; color:#64748b;">Incoming donor queue is clear.</div>
         </div>
       `;
     }
@@ -856,8 +887,10 @@
     if (!el || typeof L === 'undefined') return;
     try {
       const map = L.map(containerId).setView([12.8797, 121.7740], 6);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
       }).addTo(map);
 
       const locs = (await API.get('/api/blood/locations')).locations || [];
@@ -865,7 +898,7 @@
         if (l.latitude && l.longitude) {
           L.marker([parseFloat(l.latitude), parseFloat(l.longitude)])
             .addTo(map)
-            .bindPopup(`<b>${UI.esc(l.name)}</b><br>${UI.esc(l.address)}`);
+            .bindPopup(`<b>${UI.esc(l.name)}</b><br><span style="color:#64748b;">${UI.esc(l.address)}</span>`);
         }
       });
     } catch (e) { /* non-blocking map failure */ }
@@ -912,7 +945,7 @@
           <span class="portal-badge-pill public" style="margin:0; font-size:11.5px; padding:5px 14px;">
             ❤️ PUBLIC SERVICES &bull; DONOR
           </span>
-          <span style="font-size:12px; font-weight:700; color:#475569;">
+          <span style="font-size:12px; font-weight:700; color:#0f172a;">
             Blood Type: ${UI.bloodChip(bType)}
           </span>
         </div>
@@ -920,18 +953,18 @@
 
       <!-- Cooldown Alert Banner if active -->
       ${inCooldown ? `
-        <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:12px; padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div style="background:#fff5f5; border:1px solid #fca5a5; border-radius:14px; padding:16px 20px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
           <div style="display:flex; align-items:center; gap:12px;">
             <div style="font-size:26px;">⏳</div>
             <div>
-              <b style="color:#be123c; font-size:14px;">Donation Cooldown In Effect</b>
-              <div style="color:#881337; font-size:12.5px;">Your body is regenerating hemoglobin. You will be eligible to donate again on <b>${UI.esc(cooldownDate)}</b>.</div>
+              <b style="color:#b91c1c; font-size:14px;">Donation Cooldown In Effect</b>
+              <div style="color:#7f1d1d; font-size:12.5px;">Your body is regenerating hemoglobin. You will be eligible to donate again on <b>${UI.esc(cooldownDate)}</b>.</div>
             </div>
           </div>
-          <span class="badge" style="background:#f43f5e; color:#fff; font-weight:700; padding:6px 12px;">Cooldown Active</span>
+          <span class="badge red" style="font-weight:800; padding:6px 14px;">Cooldown Active</span>
         </div>
       ` : `
-        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:16px 20px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
           <div style="display:flex; align-items:center; gap:12px;">
             <div style="font-size:26px;">✅</div>
             <div>
@@ -939,7 +972,7 @@
               <div style="color:#166534; font-size:12.5px;">You have no active donation cooldowns. You can schedule a donation slot at any partner medical center.</div>
             </div>
           </div>
-          <a href="${UI.url('/donate.php')}" class="btn" style="background:#16a34a; color:#fff; font-weight:700; padding:7px 16px;">Schedule Now &rarr;</a>
+          <a href="${UI.url('/donate.php')}" class="btn" style="background:#16a34a; color:#fff; font-weight:800; padding:8px 18px;">Schedule Now &rarr;</a>
         </div>
       `}
 
@@ -985,7 +1018,7 @@
       <!-- Quick Action Hub -->
       <div class="action-hub">
         <a href="${UI.url('/donate.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#fef2f2; color:#c0152e;">📅</div>
+          <div class="action-tile-icon" style="background:#fee2e2; color:#b91c1c;">📅</div>
           <div class="action-tile-text">Book Donation</div>
         </a>
         <a href="${UI.url('/requests.php')}" class="action-tile">
@@ -993,19 +1026,19 @@
           <div class="action-tile-text">Request Blood</div>
         </a>
         <a href="${UI.url('/history.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#f0fdf4; color:#15803d;">📜</div>
+          <div class="action-tile-icon" style="background:#dcfce7; color:#15803d;">📜</div>
           <div class="action-tile-text">Donation Records</div>
         </a>
         <a href="${UI.url('/search.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#fdf4ff; color:#9333ea;">🔍</div>
+          <div class="action-tile-icon" style="background:#f3e8ff; color:#7e22ce;">🔍</div>
           <div class="action-tile-text">Live Blood Search</div>
         </a>
         <a href="${UI.url('/map.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#fefce8; color:#a16207;">📍</div>
+          <div class="action-tile-icon" style="background:#fef3c7; color:#b45309;">📍</div>
           <div class="action-tile-text">Blood Map (PH)</div>
         </a>
         <a href="${UI.url('/feedbacks.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#f5f3ff; color:#6366f1;">💬</div>
+          <div class="action-tile-icon" style="background:#e0e7ff; color:#4338ca;">💬</div>
           <div class="action-tile-text">Feedback</div>
         </a>
       </div>
@@ -1023,8 +1056,8 @@
             <div style="text-align:center; padding:36px 16px; color:#64748b;">
               <div style="font-size:28px; margin-bottom:8px;">🩸</div>
               <div style="font-weight:700; color:#0f172a; font-size:14px;">No Donations Recorded Yet</div>
-              <p style="font-size:12.5px; max-width:320px; margin:4px auto 14px;">Schedule your first blood donation at a verified hospital partner today!</p>
-              <a href="${UI.url('/donate.php')}" class="btn slim" style="background:#c0152e; color:#fff;">Schedule First Donation</a>
+              <p style="font-size:12.5px; max-width:320px; margin:4px auto 14px; color:#64748b;">Schedule your first blood donation at a verified hospital partner today!</p>
+              <a href="${UI.url('/donate.php')}" class="btn slim" style="background:#c0152e; color:#fff; font-weight:700;">Schedule First Donation</a>
             </div>
           ` : `
             <div style="display:flex; flex-direction:column; gap:10px;">
@@ -1036,7 +1069,7 @@
                     </div>
                     <div style="font-size:12px; color:#64748b; margin-top:2px;">
                       ${UI.bloodChip(d.blood_type)} ${d.blood_units} unit(s) &bull; Date: ${UI.fmtDate(d.donation_date)}
-                      ${d.reference_code ? `&bull; Ref: <code style="font-size:11px;">${UI.esc(d.reference_code)}</code>` : ''}
+                      ${d.reference_code ? `&bull; Ref: <code style="font-size:11px; background:#f1f5f9; padding:2px 6px; border-radius:4px; color:#0f172a;">${UI.esc(d.reference_code)}</code>` : ''}
                     </div>
                   </div>
                   <div style="text-align:right;">
@@ -1056,31 +1089,31 @@
         <div class="desk-panel">
           <div class="section-heading">
             <h2 class="section-title">📋 Pre-Donation Checklist</h2>
-            <span class="badge" style="background:#eff6ff; color:#1e40af; font-size:11px;">DOH / NVBSP</span>
+            <span class="badge blue" style="font-size:11px;">DOH / NVBSP</span>
           </div>
 
           <div style="display:flex; flex-direction:column; gap:12px; font-size:13px; color:#334155; line-height:1.5;">
             <div style="display:flex; gap:10px; align-items:flex-start;">
               <span style="font-size:18px;">⚖️</span>
-              <div><b>Weight Requirement:</b> Donors must weigh at least 50 kg (110 lbs) for whole blood donation.</div>
+              <div><b style="color:#0f172a;">Weight Requirement:</b> Donors must weigh at least 50 kg (110 lbs) for whole blood donation.</div>
             </div>
             <div style="display:flex; gap:10px; align-items:flex-start;">
               <span style="font-size:18px;">😴</span>
-              <div><b>Adequate Rest:</b> At least 6 to 8 hours of uninterrupted sleep the night before donation.</div>
+              <div><b style="color:#0f172a;">Adequate Rest:</b> At least 6 to 8 hours of uninterrupted sleep the night before donation.</div>
             </div>
             <div style="display:flex; gap:10px; align-items:flex-start;">
               <span style="font-size:18px;">🚫</span>
-              <div><b>No Alcohol:</b> Avoid consuming alcoholic beverages for at least 24 hours prior to donation.</div>
+              <div><b style="color:#0f172a;">No Alcohol:</b> Avoid consuming alcoholic beverages for at least 24 hours prior to donation.</div>
             </div>
             <div style="display:flex; gap:10px; align-items:flex-start;">
               <span style="font-size:18px;">💧</span>
-              <div><b>Hydration &amp; Meal:</b> Drink plenty of water and eat a light, non-fatty meal before proceeding to the center.</div>
+              <div><b style="color:#0f172a;">Hydration &amp; Meal:</b> Drink plenty of water and eat a light, non-fatty meal before proceeding to the center.</div>
             </div>
           </div>
 
           <div style="margin-top:20px; border-top:1px solid #e2e8f0; padding-top:14px;">
             <h3 style="font-size:13.5px; font-weight:800; color:#0f172a; margin:0 0 10px 0;">🗺️ Verified Partner Hospitals</h3>
-            <div id="donor-map" class="map-box" style="height:190px; border-radius:10px; border:1px solid #cbd5e1;"></div>
+            <div id="donor-map" class="map-box" style="height:190px; border-radius:12px;"></div>
           </div>
         </div>
       </div>
@@ -1125,7 +1158,7 @@
           <span class="portal-badge-pill public" style="margin:0; font-size:11.5px; padding:5px 14px;">
             🚑 PUBLIC SERVICES &bull; PATIENT
           </span>
-          <span style="font-size:12px; font-weight:700; color:#475569;">
+          <span style="font-size:12px; font-weight:700; color:#cbd5e1;">
             Blood Needed: ${UI.bloodChip(bNeeded)}
           </span>
         </div>
@@ -1165,7 +1198,7 @@
             <span class="kpi-label">Required Type</span>
             <div class="kpi-icon-wrap">🩸</div>
           </div>
-          <div class="kpi-num" style="font-size:24px;">${bNeeded}</div>
+          <div class="kpi-num" style="font-size:26px;">${bNeeded}</div>
           <div class="kpi-footer">Recipient matching priority</div>
         </div>
       </div>
@@ -1173,27 +1206,27 @@
       <!-- Quick Action Hub -->
       <div class="action-hub">
         <a href="${UI.url('/requests.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#fef2f2; color:#c0152e;">📋</div>
+          <div class="action-tile-icon" style="background:rgba(225, 29, 72, 0.16); color:#fda4af;">📋</div>
           <div class="action-tile-text">New Request</div>
         </a>
         <a href="${UI.url('/donate.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#eff6ff; color:#1d4ed8;">🩸</div>
+          <div class="action-tile-icon" style="background:rgba(56, 189, 248, 0.16); color:#7dd3fc;">🩸</div>
           <div class="action-tile-text">Donate Blood</div>
         </a>
         <a href="${UI.url('/history.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#f0fdf4; color:#15803d;">📜</div>
+          <div class="action-tile-icon" style="background:rgba(16, 185, 129, 0.16); color:#34d399;">📜</div>
           <div class="action-tile-text">My Requests</div>
         </a>
         <a href="${UI.url('/search.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#fdf4ff; color:#9333ea;">🔍</div>
+          <div class="action-tile-icon" style="background:rgba(168, 85, 247, 0.16); color:#d8b4fe;">🔍</div>
           <div class="action-tile-text">Search Blood</div>
         </a>
         <a href="${UI.url('/map.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#fefce8; color:#a16207;">📍</div>
+          <div class="action-tile-icon" style="background:rgba(245, 158, 11, 0.16); color:#fbbf24;">📍</div>
           <div class="action-tile-text">Hospital Map</div>
         </a>
         <a href="${UI.url('/feedbacks.php')}" class="action-tile">
-          <div class="action-tile-icon" style="background:#f5f3ff; color:#6366f1;">💬</div>
+          <div class="action-tile-icon" style="background:rgba(99, 102, 241, 0.16); color:#a5b4fc;">💬</div>
           <div class="action-tile-text">Feedback</div>
         </a>
       </div>
@@ -1211,8 +1244,8 @@
             <div style="text-align:center; padding:36px 16px; color:#64748b;">
               <div style="font-size:28px; margin-bottom:8px;">📋</div>
               <div style="font-weight:700; color:#0f172a; font-size:14px;">No Blood Requests Filed</div>
-              <p style="font-size:12.5px; max-width:320px; margin:4px auto 14px;">If you or your patient needs blood urgently, submit a formal requisition slip.</p>
-              <a href="${UI.url('/requests.php')}" class="btn slim" style="background:#c0152e; color:#fff;">Submit Requisition Slip</a>
+              <p style="font-size:12.5px; max-width:320px; margin:4px auto 14px; color:#64748b;">If you or your patient needs blood urgently, submit a formal requisition slip.</p>
+              <a href="${UI.url('/requests.php')}" class="btn slim" style="background:#c0152e; color:#fff; font-weight:700;">Submit Requisition Slip</a>
             </div>
           ` : `
             <div style="display:flex; flex-direction:column; gap:10px;">
@@ -1228,7 +1261,7 @@
                   </div>
                   <div style="text-align:right;">
                     ${UI.statusBadge(r.status)}
-                    <div style="font-size:11px; margin-top:3px; color:#475569;">
+                    <div style="font-size:11px; margin-top:3px; color:#64748b;">
                       Sec. F: ${r.document_status === 'Verified' ? '<span style="color:#15803d; font-weight:700;">Verified</span>' : '<span style="color:#b45309; font-weight:700;">In Review</span>'}
                     </div>
                   </div>
@@ -1245,27 +1278,27 @@
         <div class="desk-panel">
           <div class="section-heading">
             <h2 class="section-title">🏥 Hospital Requisition Steps</h2>
-            <span class="badge" style="background:#fef3c7; color:#92400e; font-size:11px;">Standard Protocol</span>
+            <span class="badge orange" style="font-size:11px;">Standard Protocol</span>
           </div>
 
           <div style="display:flex; flex-direction:column; gap:14px; font-size:13px; color:#334155; line-height:1.5;">
             <div style="display:flex; gap:10px;">
               <div style="width:24px; height:24px; border-radius:50%; background:#c0152e; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; flex-shrink:0;">1</div>
-              <div><b>Submit Online Request:</b> Fill in Sections A through E with patient information, attending physician, and hospital details.</div>
+              <div><b style="color:#0f172a;">Submit Online Request:</b> Fill in Sections A through E with patient information, attending physician, and hospital details.</div>
             </div>
             <div style="display:flex; gap:10px;">
               <div style="width:24px; height:24px; border-radius:50%; background:#0284c7; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; flex-shrink:0;">2</div>
-              <div><b>Upload Doctor's Slip:</b> Attach a clear photo or PDF scan of the official physician requisition slip.</div>
+              <div><b style="color:#0f172a;">Upload Doctor's Slip:</b> Attach a clear photo or PDF scan of the official physician requisition slip.</div>
             </div>
             <div style="display:flex; gap:10px;">
               <div style="width:24px; height:24px; border-radius:50%; background:#16a34a; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; flex-shrink:0;">3</div>
-              <div><b>Section F Verification &amp; Release:</b> Hospital Medical Technologist verifies compatibility and reserves the units for pickup.</div>
+              <div><b style="color:#0f172a;">Section F Verification &amp; Release:</b> Hospital Medical Technologist verifies compatibility and reserves the units for pickup.</div>
             </div>
           </div>
 
           <div style="margin-top:20px; border-top:1px solid #e2e8f0; padding-top:14px;">
             <h3 style="font-size:13.5px; font-weight:800; color:#0f172a; margin:0 0 10px 0;">📍 Connected Hospital Blood Centers</h3>
-            <div id="patient-map" class="map-box" style="height:190px; border-radius:10px; border:1px solid #cbd5e1;"></div>
+            <div id="patient-map" class="map-box" style="height:190px; border-radius:12px;"></div>
           </div>
         </div>
       </div>

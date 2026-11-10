@@ -28,7 +28,7 @@
   const hospitalId = Shell.user.hospital_id || '';
 
   const locFilterHtml = isStaff
-    ? `<span class="badge" style="background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe; font-size:12.5px; padding:6px 12px; border-radius:8px; font-weight:700;">🏥 ${UI.esc(hospitalName)}</span><input type="hidden" id="f-loc" value="${hospitalId}">`
+    ? `<span class="badge" style="background:rgba(56, 189, 248, 0.15); color:#7dd3fc; border:1px solid rgba(56, 189, 248, 0.35); font-size:12.5px; padding:6px 14px; border-radius:8px; font-weight:700; box-shadow:0 0 10px rgba(56,189,248,0.2);">🏥 ${UI.esc(hospitalName)}</span><input type="hidden" id="f-loc" value="${hospitalId}">`
     : `<select id="f-loc"><option value="">All locations</option>${locOptions}</select>`;
 
   page.innerHTML = `

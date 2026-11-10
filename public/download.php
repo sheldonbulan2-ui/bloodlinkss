@@ -46,11 +46,12 @@ $androidTargetUrl = $baseUrl . '/public/download.php?dl=1';
   }
   .download-hero {
     text-align: center;
-    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 50%, #7f1d1d 100%);
-    color: #fff;
-    padding: 38px 22px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+    padding: 38px 24px;
     border-radius: 20px;
-    box-shadow: 0 12px 36px rgba(185, 28, 28, 0.25);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     margin-bottom: 28px;
   }
   .download-hero h1 {
@@ -58,23 +59,25 @@ $androidTargetUrl = $baseUrl . '/public/download.php?dl=1';
     font-weight: 800;
     margin: 0 0 10px 0;
     letter-spacing: -0.5px;
+    color: #0f172a;
   }
   .download-hero p {
     font-size: 15px;
-    color: #fecaca;
+    color: #64748b;
     max-width: 620px;
     margin: 0 auto 20px;
     line-height: 1.6;
   }
   .os-card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 18px;
     padding: 28px 24px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     position: relative;
-    border-top: 5px solid #059669;
+    border-top: 5px solid #16a34a;
     margin-bottom: 28px;
+    color: #0f172a;
   }
   .os-badge {
     position: absolute;
@@ -86,16 +89,16 @@ $androidTargetUrl = $baseUrl . '/public/download.php?dl=1';
     font-weight: 800;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-  .badge-android { background: #059669; color: #fff; }
+  .badge-android { background: #16a34a; color: #fff; }
   .step-card {
     display: flex;
     gap: 16px;
     align-items: flex-start;
     padding: 16px;
     background: #f8fafc;
-    border: 1px solid #f1f5f9;
+    border: 1px solid #e2e8f0;
     border-radius: 12px;
     margin-bottom: 12px;
   }
@@ -111,17 +114,17 @@ $androidTargetUrl = $baseUrl . '/public/download.php?dl=1';
     font-size: 14px;
     flex-shrink: 0;
   }
-  .num-android { background: #059669; }
+  .num-android { background: #16a34a; }
   .step-content h4 {
     margin: 0 0 4px 0;
     font-size: 15px;
     font-weight: 700;
-    color: #111827;
+    color: #0f172a;
   }
   .step-content p {
     margin: 0;
     font-size: 13.5px;
-    color: #4b5563;
+    color: #64748b;
     line-height: 1.5;
   }
   .step-tag {
@@ -132,21 +135,21 @@ $androidTargetUrl = $baseUrl . '/public/download.php?dl=1';
     font-weight: 700;
     margin-top: 6px;
   }
-  .tag-android { background: #d1fae5; color: #065f46; }
+  .tag-android { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
   .faq-box {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
     padding: 14px 0;
   }
   .faq-box:last-child { border-bottom: none; }
-  .faq-box b { color: #111827; font-size: 14px; display: block; margin-bottom: 4px; }
-  .faq-box p { color: #4b5563; font-size: 13px; margin: 0; line-height: 1.5; }
+  .faq-box b { color: #0f172a; font-size: 14px; display: block; margin-bottom: 4px; }
+  .faq-box p { color: #64748b; font-size: 13px; margin: 0; line-height: 1.5; }
   .qr-box {
     display: inline-block;
     padding: 10px;
     background: #fff;
-    border: 2px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     margin-bottom: 8px;
   }
 
@@ -159,11 +162,11 @@ $androidTargetUrl = $baseUrl . '/public/download.php?dl=1';
   }
 </style>
 </head>
-<body style="background:#f8fafc;">
+<body style="background: #f8fafc; min-height: 100vh; color: #0f172a;">
 <div class="guide-container">
   <!-- Nav -->
   <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
-    <a href="index.php" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#111827; font-weight:700; font-size:16px;">
+    <a href="index.php" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#0f172a; font-weight:700; font-size:16px;">
       <img src="images/logo.png" alt="BloodLink" style="width:32px; height:32px; border-radius:6px;">
       <span>BloodLink</span>
     </a>

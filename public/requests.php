@@ -9,34 +9,36 @@
 <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
 <style>
   .form-section-header {
-    background: #c0152e;
-    color: #fff;
-    padding: 8px 14px;
+    background: linear-gradient(135deg, rgba(225, 29, 72, 0.3), rgba(159, 18, 57, 0.4));
+    border: 1px solid rgba(225, 29, 72, 0.4);
+    color: #ffffff;
+    padding: 10px 16px;
     font-size: 13.5px;
     font-weight: 800;
     letter-spacing: 0.5px;
-    border-radius: 6px;
+    border-radius: 8px;
     margin-top: 18px;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    box-shadow: 0 0 12px rgba(225, 29, 72, 0.15);
   }
   .form-section-header:first-of-type { margin-top: 4px; }
-  .badge-doc-verified { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 11px; }
-  .badge-doc-correction { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 11px; }
-  .badge-doc-rejected { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 11px; }
-  .badge-doc-pending { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 11px; }
+  .badge-doc-verified { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 11px; }
+  .badge-doc-correction { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 11px; }
+  .badge-doc-rejected { background: rgba(225, 29, 72, 0.18); color: #fda4af; border: 1px solid rgba(225, 29, 72, 0.4); font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 11px; }
+  .badge-doc-pending { background: rgba(255, 255, 255, 0.06); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.12); font-weight: 700; padding: 3px 8px; border-radius: 6px; font-size: 11px; }
   .fee-card {
     background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
     margin-top: 14px;
   }
-  .fee-table { width: 100%; font-size: 12.5px; border-collapse: collapse; margin-top: 8px; }
-  .fee-table td, .fee-table th { padding: 6px 8px; border-bottom: 1px solid #e2e8f0; }
-  .fee-table th { text-align: left; background: #e2e8f0; color: #334155; font-size: 11.5px; }
+  .fee-table { width: 100%; font-size: 12.5px; border-collapse: collapse; margin-top: 8px; color: #0f172a; }
+  .fee-table td, .fee-table th { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
+  .fee-table th { text-align: left; background: #f8fafc; color: #475569; font-size: 11.5px; border-bottom: 1px solid #e2e8f0; }
 </style>
 </head>
 <body>
@@ -61,15 +63,15 @@
     const page = Shell.page();
     page.innerHTML = `
       <div class="grid cols-2" style="grid-template-columns: 1.25fr 0.75fr; gap: 20px;">
-        <div class="card" style="box-shadow: 0 4px 14px rgba(0,0,0,0.06); border-radius: 12px;">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #c0152e; padding-bottom:10px; margin-bottom:12px;">
+        <div class="card" style="box-shadow: 0 4px 20px rgba(0,0,0,0.5); border-radius: 14px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid rgba(225, 29, 72, 0.4); padding-bottom:12px; margin-bottom:14px;">
             <div>
-              <h2 style="margin:0; font-size:19px; color:#111827;">BLOOD REQUEST FORM</h2>
-              <small class="muted" style="font-size:11.5px; display:block; margin-top:2px;">
+              <h2 style="margin:0; font-size:19px; color:#ffffff;">BLOOD REQUEST FORM</h2>
+              <small class="muted" style="font-size:11.5px; display:block; margin-top:2px; color:#94a3b8;">
                 TEMPLATE &mdash; Official NVBSP / Hospital Requisition &amp; Verification Workflow
               </small>
             </div>
-            <span style="background:#fee2e2; color:#b91c1c; font-size:10.5px; font-weight:800; padding:4px 8px; border-radius:4px; text-transform:uppercase;">
+            <span style="background:rgba(225, 29, 72, 0.18); color:#fda4af; border:1px solid rgba(225, 29, 72, 0.35); font-size:10.5px; font-weight:800; padding:4px 8px; border-radius:4px; text-transform:uppercase;">
               Sec. A &ndash; E Requisition
             </span>
           </div>
@@ -529,18 +531,18 @@
 
     const blankFormCardHtml = isStaffOnly ? `
       <!-- Staff Official Blank Form Upload Card (Feature 6 - Applicable to Staff Only) -->
-      <div class="card" style="margin-bottom: 16px; border: 1.5px solid #bfdbfe; background: #f8fafc; border-radius: 10px;">
+      <div class="card" style="margin-bottom: 16px; border: 1px solid rgba(56, 189, 248, 0.3); background: rgba(56, 189, 248, 0.06); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
           <div>
-            <h3 style="margin:0; font-size:15px; color:#1e3a8a; display:flex; align-items:center; gap:6px;">
+            <h3 style="margin:0; font-size:15px; color:#7dd3fc; display:flex; align-items:center; gap:6px;">
               📄 Official Blank Blood Request Form (Hospital Requisition Template)
             </h3>
-            <small class="muted" style="font-size:12px; display:block; margin-top:2px;">
+            <small class="muted" style="font-size:12px; display:block; margin-top:2px; color:#94a3b8;">
               Blanko at napi-print na Blood Request Form na awtomatikong ida-download ng pasyente o requester matapos mag-submit.
             </small>
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
-            <a id="view-blank-form-btn" href="official_blood_request_form.php" target="_blank" class="btn slim" style="background:#2563eb; color:#fff; text-decoration:none; padding:6px 12px; font-size:12px;">
+            <a id="view-blank-form-btn" href="official_blood_request_form.php" target="_blank" class="btn slim" style="background:#0284c7; color:#fff; text-decoration:none; padding:6px 12px; font-size:12px;">
               👁️ View / Download Current Form
             </a>
             <label class="btn slim" style="background:#059669; color:#fff; cursor:pointer; padding:6px 12px; font-size:12px; margin:0;">
@@ -557,10 +559,10 @@
       ${blankFormCardHtml}
 
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid rgba(225, 29, 72, 0.2); padding-bottom:10px;">
           <div>
-            <h2 style="margin:0; font-size:19px;">Blood Requests &amp; Section F Verification Portal</h2>
-            <small class="muted">Hospital Blood Bank Review, Compatibility Testing, and Inventory Allocation</small>
+            <h2 style="margin:0; font-size:19px; color:#ffffff;">Blood Requests &amp; Section F Verification Portal</h2>
+            <small class="muted" style="color:#94a3b8;">Hospital Blood Bank Review, Compatibility Testing, and Inventory Allocation</small>
           </div>
           <div class="toolbar" style="margin:0;">
             <select id="f-status">
@@ -686,9 +688,9 @@
       const content = `
         <div style="display:grid; grid-template-columns: 320px 1fr; gap:20px; align-items:start;">
           <!-- LEFT COLUMN: Requisition Document Preview -->
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px;">
+          <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:13px; font-weight:700; color:#1e293b; display:flex; align-items:center; gap:6px;">
+              <span style="font-size:13px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:6px;">
                 📄 Doctor's Requisition Slip
               </span>
               <a href="${viewDocUrl}" target="_blank" class="btn slim ghost" style="font-size:11px; padding:3px 8px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
@@ -696,28 +698,28 @@
               </a>
             </div>
             
-            <div style="background:#fff; border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; min-height:280px; max-height:420px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:inset 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; min-height:280px; max-height:420px; display:flex; align-items:center; justify-content:center; position:relative;">
               ${docImg ? `
                 <img src="${docImg}" 
                      style="max-width:100%; max-height:400px; object-fit:contain; cursor:pointer;" 
                      onclick="window.open('${viewDocUrl}', '_blank')" 
                      alt="Requisition Slip" 
-                     onerror="this.parentElement.innerHTML='<div style=\'padding:32px 16px; text-align:center; color:#64748b; font-size:12px;\'><div style=\'font-size:32px; margin-bottom:8px;\'>📋</div><b style=\'color:#1e293b; font-size:13px;\'>Official Digital Requisition Active</b><p style=\'margin:6px 0 14px; font-size:11.5px; color:#64748b; line-height:1.4;\'>Uploaded slip archived. Clinical record is verified in the NVBSP registry.</p><a href=\'${viewDocUrl}\' target=\'_blank\' class=\'btn slim\' style=\'background:#2563eb; color:#fff; text-decoration:none; font-size:11.5px; padding:6px 12px;\'>📄 View Official Requisition Form</a></div>';"/>
+                     onerror="this.parentElement.innerHTML='<div style=\'padding:32px 16px; text-align:center; color:#64748b; font-size:12px;\'><div style=\'font-size:32px; margin-bottom:8px;\'>📋</div><b style=\'color:#0f172a; font-size:13px;\'>Official Digital Requisition Active</b><p style=\'margin:6px 0 14px; font-size:11.5px; color:#64748b; line-height:1.4;\'>Uploaded slip archived. Clinical record is verified in the NVBSP registry.</p><a href=\'${viewDocUrl}\' target=\'_blank\' class=\'btn slim\' style=\'background:#0284c7; color:#fff; text-decoration:none; font-size:11.5px; padding:6px 12px;\'>📄 View Official Requisition Form</a></div>';"/>
               ` : `
                 <div style="padding:32px 16px; text-align:center; color:#64748b; font-size:12px;">
                   <div style="font-size:32px; margin-bottom:8px;">📋</div>
-                  <b style="color:#1e293b; font-size:13px;">Official Digital Requisition</b>
+                  <b style="color:#0f172a; font-size:13px;">Official Digital Requisition</b>
                   <p style="margin:6px 0 14px; font-size:11.5px; color:#64748b; line-height:1.4;">
                     Physical requisition template generated and ready for hospital clinical review.
                   </p>
-                  <a href="${viewDocUrl}" target="_blank" class="btn slim" style="background:#2563eb; color:#fff; text-decoration:none; font-size:11.5px; padding:6px 12px;">
+                  <a href="${viewDocUrl}" target="_blank" class="btn slim" style="background:#0284c7; color:#fff; text-decoration:none; font-size:11.5px; padding:6px 12px;">
                     📄 View Official Requisition Form
                   </a>
                 </div>
               `}
             </div>
 
-            <div style="font-size:11.5px; color:#64748b; background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:11.5px; color:#334155; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
               <span><b>Ref No:</b> ${UI.esc(r.request_ref_no || ('#' + r.id))}</span>
               <span style="font-size:11px;">📅 ${UI.fmtDate(r.request_date)}</span>
             </div>
@@ -726,8 +728,8 @@
           <!-- RIGHT COLUMN: Case Summary & Section F Form -->
           <div style="display:flex; flex-direction:column; gap:14px;">
             <!-- Sections A - E Summary Card -->
-            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
-              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:8px; margin-bottom:10px;">
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:12px;">
                 <span style="font-size:12px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">
                   Patient &amp; Clinical Requisition Overview
                 </span>
@@ -740,7 +742,7 @@
                 </span>
               </div>
 
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; font-size:12.5px;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; font-size:12.5px; color:#0f172a;">
                 <div><span class="muted" style="font-size:11.5px; display:block;">Patient Name:</span> <b>${UI.esc(patName)}</b> (${UI.esc(r.patient_sex || '-')} &bull; Age: ${UI.esc(r.patient_age || '-')})</div>
                 <div><span class="muted" style="font-size:11.5px; display:block;">Hospital MRN / Case No:</span> <b>${UI.esc(r.patient_mrn || r.patient_code || 'N/A')}</b></div>
                 <div><span class="muted" style="font-size:11.5px; display:block;">Facility / Location:</span> <b>${UI.esc(r.location || '-')}</b></div>
@@ -751,22 +753,22 @@
                 <div><span class="muted" style="font-size:11.5px; display:block;">Contact Number:</span> <b>${UI.esc(r.contact_number || r.patient_contact || '-')}</b></div>
               </div>
 
-              <div style="margin-top:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:8px 12px; font-size:12px;">
-                <b style="color:#0f172a;">Clinical Indication / Diagnosis:</b> 
+              <div style="margin-top:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; font-size:12px;">
+                <b style="color:#c0152e;">Clinical Indication / Diagnosis:</b> 
                 <span style="color:#334155;">${UI.esc(r.clinical_indication || r.reason || 'None specified')}</span>
               </div>
             </div>
 
             <!-- Section F Verification Card -->
-            <div style="background:#ffffff; border:1px solid #e2e8f0; border-top:3px solid #c0152e; border-radius:10px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-top:3px solid #c0152e; border-radius:14px; padding:18px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                 <div>
-                  <h4 style="margin:0; color:#b91c1c; font-size:13.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">
+                  <h4 style="margin:0; color:#c0152e; font-size:13.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">
                     F. Blood Bank / Hospital Staff Verification
                   </h4>
-                  <small class="muted" style="font-size:11.5px;">Document audit, crossmatch confirmation, and blood unit allocation</small>
+                  <small class="muted" style="font-size:11.5px; color:#64748b;">Document audit, crossmatch confirmation, and blood unit allocation</small>
                 </div>
-                <span style="font-size:11px; background:#fee2e2; color:#991b1b; padding:2px 8px; border-radius:4px; font-weight:700;">
+                <span style="font-size:11px; background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding:3px 8px; border-radius:6px; font-weight:700;">
                   Official Staff Only
                 </span>
               </div>
@@ -777,7 +779,7 @@
                     <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:4px;">
                       Document Status *
                     </label>
-                    <select id="modal-sec-f-docstatus" style="width:100%; padding:8px 10px; font-size:13px; border:1px solid #cbd5e1; border-radius:6px; background:#fff;">
+                    <select id="modal-sec-f-docstatus" style="width:100%; padding:9px 12px; font-size:13px; border:1.5px solid #cbd5e1; border-radius:8px; background:#ffffff; color:#0f172a;">
                       <option value="Verified" ${r.document_status === 'Verified' ? 'selected' : ''}>Verified (Document Accepted)</option>
                       <option value="Needs Correction" ${r.document_status === 'Needs Correction' ? 'selected' : ''}>Needs Correction (Return to Requester)</option>
                       <option value="Rejected" ${r.document_status === 'Rejected' ? 'selected' : ''}>Rejected (Document Disallowed)</option>
@@ -789,8 +791,8 @@
                       Units &amp; Component Confirmed
                     </label>
                     <div style="display:flex; gap:8px;">
-                      <input id="modal-sec-f-units" type="number" min="1" max="${r.units_needed}" value="${r.units_confirmed || r.units_needed}" style="width:70px; padding:8px; font-size:13px; border:1px solid #cbd5e1; border-radius:6px; text-align:center; font-weight:700;">
-                      <input id="modal-sec-f-comp" value="${UI.esc(r.component_confirmed || r.component_type || 'Whole Blood')}" style="flex:1; padding:8px 10px; font-size:13px; border:1px solid #cbd5e1; border-radius:6px;">
+                      <input id="modal-sec-f-units" type="number" min="1" max="${r.units_needed}" value="${r.units_confirmed || r.units_needed}" style="width:70px; padding:9px 10px; font-size:13px; border:1.5px solid #cbd5e1; border-radius:8px; background:#ffffff; color:#0f172a; text-align:center; font-weight:700;">
+                      <input id="modal-sec-f-comp" value="${UI.esc(r.component_confirmed || r.component_type || 'Whole Blood')}" style="flex:1; padding:9px 12px; font-size:13px; border:1.5px solid #cbd5e1; border-radius:8px; background:#ffffff; color:#0f172a;">
                     </div>
                   </div>
                 </div>
@@ -799,35 +801,39 @@
                   <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:4px;">
                     Compatibility &amp; Testing Notes (Authorized Staff Only)
                   </label>
-                  <textarea id="modal-sec-f-compat" style="width:100%; min-height:55px; padding:8px 10px; font-size:12.5px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit; resize:vertical;" placeholder="Crossmatch result (Major/Minor), Serology clearance, Bag segment IDs...">${UI.esc(r.compatibility_notes || '')}</textarea>
+                  <textarea id="modal-sec-f-compat" style="width:100%; min-height:55px; padding:9px 12px; font-size:12.5px; border:1.5px solid #cbd5e1; border-radius:8px; background:#ffffff; color:#0f172a; font-family:inherit; resize:vertical;" placeholder="Crossmatch result (Major/Minor), Serology clearance, Bag segment IDs...">${UI.esc(r.compatibility_notes || '')}</textarea>
                 </div>
 
                 <div>
                   <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:4px;">
                     Correction Notes / Rejection Remarks <span style="font-weight:400; color:#64748b;">(Visible to Patient in App)</span>
                   </label>
-                  <textarea id="modal-sec-f-correction" style="width:100%; min-height:50px; padding:8px 10px; font-size:12.5px; border:1px solid #cbd5e1; border-radius:6px; font-family:inherit; resize:vertical;" placeholder="If 'Needs Correction' or 'Rejected', detail exact issue here...">${UI.esc(r.correction_notes || r.rejection_reason || '')}</textarea>
+                  <textarea id="modal-sec-f-correction" style="width:100%; min-height:50px; padding:9px 12px; font-size:12.5px; border:1.5px solid #cbd5e1; border-radius:8px; background:#ffffff; color:#0f172a; font-family:inherit; resize:vertical;" placeholder="If 'Needs Correction' or 'Rejected', detail exact issue here...">${UI.esc(r.correction_notes || r.rejection_reason || '')}</textarea>
                 </div>
 
                 <div>
                   <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:4px;">
                     Staff Verifier Signature / ID
                   </label>
-                  <input id="modal-sec-f-staff-sig" value="${UI.esc(r.staff_signature_id || (Shell.user.username + ' (Staff ID #' + Shell.user.id + ' - ' + (Shell.hospital?.location_name || 'Hospital Staff') + ')'))}" style="width:100%; padding:8px 10px; font-size:12.5px; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc;">
+                  <input id="modal-sec-f-staff-sig" value="${UI.esc(r.staff_signature_id || (Shell.user.username + ' (Staff ID #' + Shell.user.id + ' - ' + (Shell.hospital?.location_name || 'Hospital Staff') + ')'))}" style="width:100%; padding:9px 12px; font-size:12.5px; border:1.5px solid #cbd5e1; border-radius:8px; background:#ffffff; color:#0f172a;">
                 </div>
               </div>
 
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; border-top:1px solid #e2e8f0; padding-top:14px; flex-wrap:wrap; gap:10px;">
-                <button type="button" class="btn" style="background:#2563eb; color:#fff; padding:7px 16px; font-size:13px; font-weight:700; border-radius:6px; display:inline-flex; align-items:center; gap:6px;" onclick="saveSectionF(${r.id})">
+                <button type="button" class="btn" style="background:#0284c7; color:#fff; padding:8px 18px; font-size:13px; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; gap:6px;" onclick="saveSectionF(${r.id})">
                   💾 Save Section F Verification
                 </button>
                 ${['admin', 'superadmin'].includes(Shell.role) ? '' : `
-                <button type="button" class="btn green" style="background:#059669; color:#fff; padding:7px 18px; font-size:13px; font-weight:700; border-radius:6px; display:inline-flex; align-items:center; gap:6px;" onclick="fulfillModal(${r.id}, '${r.blood_type}', ${r.units_needed}, '${r.component_type || 'Whole Blood'}')">
+                <button type="button" class="btn green" style="background:#16a34a; color:#fff; padding:8px 20px; font-size:13px; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; gap:6px;" onclick="fulfillModal(${r.id}, '${r.blood_type}', ${r.units_needed}, '${r.component_type || 'Whole Blood'}')">
                   💉 Fulfill &amp; Release
                 </button>
                 `}
               </div>
             </div>
+          </div>
+        </div>
+          </div>
+        </div>
           </div>
         </div>
       `;

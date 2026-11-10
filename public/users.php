@@ -11,9 +11,9 @@
   .hospital-group-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
+    border-radius: 16px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     overflow: hidden;
   }
   .hospital-group-header {
@@ -39,6 +39,7 @@
     align-items: center;
     gap: 8px;
     font-size: 12px;
+    color: #64748b;
   }
   .hospital-filter-pill {
     padding: 6px 14px;
@@ -47,14 +48,15 @@
     font-weight: 700;
     cursor: pointer;
     border: 1px solid #cbd5e1;
-    background: #fff;
+    background: #ffffff;
     color: #475569;
     transition: all 0.15s ease;
   }
   .hospital-filter-pill:hover, .hospital-filter-pill.active {
-    background: #0f172a;
+    background: #c0152e;
     color: #fff;
-    border-color: #0f172a;
+    border-color: #9f1239;
+    box-shadow: 0 2px 8px rgba(192, 21, 46, 0.25);
   }
 </style>
 </head>
@@ -85,7 +87,7 @@
         <h1 style="font-size:20px; font-weight:800; margin:0 0 4px 0;">
           ${isSuper ? '🏥 Registered Patients &amp; Voluntary Donors (Organized by Hospital)' : `Official Hospital Users &mdash; ${UI.esc(hospitalName)}`}
         </h1>
-        <p style="margin:0; font-size:13.5px; color:#4b5563;">
+        <p style="margin:0; font-size:13.5px; color:#94a3b8;">
           ${isSuper
             ? 'Superadmin directory showing registered patients and voluntary donors strictly organized and separated by their hospital facility.'
             : `Directory of registered users belonging strictly to <b>${UI.esc(hospitalName)}</b>.`}
