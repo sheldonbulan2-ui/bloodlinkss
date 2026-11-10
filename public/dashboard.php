@@ -352,7 +352,7 @@
           <p class="dash-hero-subtitle">System-wide health metrics, multi-facility blood stock oversight, feature adoption, and audit governance.</p>
         </div>
         <div class="dash-hero-badges">
-          <span class="role-pill superadmin">🛡️ Super Admin</span>
+          <span class="portal-badge-pill governance" style="margin:0; font-size:11.5px; padding:5px 14px;">🛡️ GOVERNANCE &bull; SUPER ADMIN</span>
           <span style="font-size:11.5px; color:#64748b; font-weight:600;">System Active &middot; All Systems Operational</span>
         </div>
       </div>
@@ -530,7 +530,7 @@
           <p class="dash-hero-subtitle">Comprehensive supervisory dashboard for staff assignments, inventory control, and emergency fulfillment.</p>
         </div>
         <div class="dash-hero-badges">
-          <span class="role-pill admin">🏥 Hospital Admin</span>
+          <span class="portal-badge-pill management" style="margin:0; font-size:11.5px; padding:5px 14px;">📋 MANAGEMENT &bull; HOSPITAL ADMIN</span>
           <span style="font-size:11.5px; color:#64748b; font-weight:600;">Oversight: ${UI.esc(hospName)}</span>
         </div>
       </div>
@@ -654,7 +654,7 @@
           <p class="dash-hero-subtitle">Active shift command center: triage blood requests, verify donor medical screenings, and maintain stocks.</p>
         </div>
         <div class="dash-hero-badges">
-          <span class="role-pill staff">🩺 Hospital Staff</span>
+          <span class="portal-badge-pill clinical" style="margin:0; font-size:11.5px; padding:5px 14px;">🩺 CLINICAL ACCESS &bull; STAFF</span>
           <span style="font-size:11.5px; color:#64748b; font-weight:600;">Shift Desk Active</span>
         </div>
       </div>
@@ -909,8 +909,8 @@
           </p>
         </div>
         <div class="dash-hero-badges">
-          <span class="role-badge staff" style="background:#fef2f2; color:#b91c1c; border-color:#fecaca;">
-            🩸 Verified Blood Donor
+          <span class="portal-badge-pill public" style="margin:0; font-size:11.5px; padding:5px 14px;">
+            ❤️ PUBLIC SERVICES &bull; DONOR
           </span>
           <span style="font-size:12px; font-weight:700; color:#475569;">
             Blood Type: ${UI.bloodChip(bType)}
@@ -1122,8 +1122,8 @@
           </p>
         </div>
         <div class="dash-hero-badges">
-          <span class="role-badge staff" style="background:#fff7ed; color:#c2410c; border-color:#ffedd5;">
-            🚑 Patient / Requester Portal
+          <span class="portal-badge-pill public" style="margin:0; font-size:11.5px; padding:5px 14px;">
+            🚑 PUBLIC SERVICES &bull; PATIENT
           </span>
           <span style="font-size:12px; font-weight:700; color:#475569;">
             Blood Needed: ${UI.bloodChip(bNeeded)}

@@ -102,94 +102,299 @@
 </style>
 </head>
 <body>
-<div class="hero">
-  <nav>
-    <div class="brand-text" style="display:flex; align-items:center; gap:10px;">
-      <img src="images/logo.png" alt="BloodLink Logo" style="width:34px; height:34px; object-fit:contain; border-radius:8px; background:#fff; padding:2px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
-      <span style="font-weight:800; letter-spacing:-0.3px;">BloodLink</span>
-      <span style="font-size:11px; font-weight:700; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px; margin-left:4px; display:inline-block;">Hospital &amp; Regional Network</span>
+<div class="hero-luminous">
+  <!-- Red Ambient Glow Orbs -->
+  <div class="hero-glow-orb hero-glow-1"></div>
+  <div class="hero-glow-orb hero-glow-2"></div>
+  <div class="hero-glow-orb hero-glow-3"></div>
+
+  <!-- Subtle Floating Erythrocytes (Bokeh Red Blood Cells) -->
+  <svg class="rbc-bokeh rbc-1" viewBox="0 0 100 60">
+    <ellipse cx="50" cy="30" rx="46" ry="24" fill="url(#rbcGrad)" />
+    <ellipse cx="50" cy="30" rx="24" ry="12" fill="#2d0309" opacity="0.6" />
+  </svg>
+  <svg class="rbc-bokeh rbc-2" viewBox="0 0 100 60">
+    <ellipse cx="50" cy="30" rx="46" ry="24" fill="url(#rbcGrad)" />
+    <ellipse cx="50" cy="30" rx="24" ry="12" fill="#2d0309" opacity="0.6" />
+  </svg>
+  <svg class="rbc-bokeh rbc-3" viewBox="0 0 100 60">
+    <ellipse cx="50" cy="30" rx="46" ry="24" fill="url(#rbcGrad)" />
+    <ellipse cx="50" cy="30" rx="24" ry="12" fill="#2d0309" opacity="0.6" />
+  </svg>
+  <svg class="rbc-bokeh rbc-4" viewBox="0 0 100 60">
+    <ellipse cx="50" cy="30" rx="46" ry="24" fill="url(#rbcGrad)" />
+    <ellipse cx="50" cy="30" rx="24" ry="12" fill="#2d0309" opacity="0.6" />
+  </svg>
+
+  <!-- SVG Global Gradients for Visuals -->
+  <svg width="0" height="0" style="position:absolute; pointer-events:none;">
+    <defs>
+      <linearGradient id="rbcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ff3355" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#700918" stop-opacity="0.9" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Top Navigation Bar -->
+  <nav class="hero-nav">
+    <div class="hero-nav-left">
+      <a href="index.php" class="hero-nav-brand">
+        <img src="images/logo.png" alt="BloodLink Logo" class="hero-nav-logo">
+        <span class="hero-nav-title">BloodLink</span>
+      </a>
+      <span class="hero-nav-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.6"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Trusted &bull; Secure &bull; Life-Saving
+      </span>
     </div>
-    <span class="spacer"></span>
-    <a href="#" onclick="openMapModal('map'); return false;" style="color:#fff; font-weight:600; text-decoration:none; margin-right:14px; font-size:13.5px;">📍 Live Map</a>
-    <a href="download.php" target="_blank" style="color:#fff; font-weight:600; text-decoration:none; margin-right:18px; font-size:13.5px;">📱 Mobile App</a>
-    <a href="login.php" class="btn white" style="font-weight:800; padding:8px 18px; font-size:13.5px; border-radius:9px; box-shadow:0 4px 14px rgba(0,0,0,0.2);">🔐 Portal Login</a>
+
+    <div class="hero-nav-right">
+      <a href="#" onclick="openMapModal('map'); return false;" class="hero-nav-link">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        Live Map
+      </a>
+      <a href="download.php" target="_blank" class="hero-nav-link">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        Mobile App
+      </a>
+      <a href="login.php" class="hero-portal-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        Portal Login &rarr;
+      </a>
+    </div>
   </nav>
 
-  <div class="center">
-    <h1 style="max-width:850px;">Find blood. <span>Give blood.</span> Save lives.</h1>
-    <p style="max-width:680px;">BloodLink connects Hospital Staff, Administrators, Donors, and Patients in one secure Philippine healthcare platform. Real-time inventory tracking, verified donor screening, and cold-chain compliance.</p>
-    
-    <div class="actions" style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
-      <a href="login.php" class="btn white" style="cursor:pointer; font-weight:800; padding:12px 24px; text-decoration:none; font-size:15px;">
-        🔐 Access Official Portal
-      </a>
-      <button type="button" class="btn" onclick="openMapModal('search')" style="cursor:pointer; font-weight:700; padding:12px 20px; background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.3);">
-        🔍 Search Blood Inventory
-      </button>
-      <button type="button" class="btn" onclick="openMapModal('map')" style="cursor:pointer; font-weight:700; padding:12px 20px; background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.3);">
-        📍 Live Philippines Map
-      </button>
+  <!-- Hero Content Wrap -->
+  <div class="hero-content-wrap">
+    <!-- 3-Column Stage (Droplet on Left, Center Hero, Constellation on Right) -->
+    <div class="hero-stage">
+      <!-- Left Column: 3D Glowing Glass Blood Droplet with Cross & Orbital Rings -->
+      <div class="hero-visual-left">
+        <svg viewBox="0 0 260 320" class="glass-droplet-container">
+          <defs>
+            <radialGradient id="dropFluid" cx="42%" cy="56%" r="62%">
+              <stop offset="0%" stop-color="#ff3b5c" stop-opacity="0.95" />
+              <stop offset="40%" stop-color="#c0152e" stop-opacity="0.92" />
+              <stop offset="80%" stop-color="#700918" stop-opacity="0.96" />
+              <stop offset="100%" stop-color="#3d030c" stop-opacity="0.98" />
+            </radialGradient>
+            <radialGradient id="dropAura" cx="50%" cy="60%" r="50%">
+              <stop offset="0%" stop-color="#ff1a40" stop-opacity="0.45" />
+              <stop offset="100%" stop-color="#ff1a40" stop-opacity="0" />
+            </radialGradient>
+            <linearGradient id="specularRim" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+              <stop offset="25%" stop-color="#ffffff" stop-opacity="0.3" />
+              <stop offset="70%" stop-color="#ff6b81" stop-opacity="0.15" />
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.5" />
+            </linearGradient>
+            <linearGradient id="glassGloss" x1="0%" y1="0%" x2="100%" y2="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85" />
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="ringGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff3355" stop-opacity="0" />
+              <stop offset="50%" stop-color="#ffffff" stop-opacity="0.85" />
+              <stop offset="100%" stop-color="#ff3355" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="ringGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff1a40" stop-opacity="0" />
+              <stop offset="40%" stop-color="#ff4d6d" stop-opacity="0.75" />
+              <stop offset="100%" stop-color="#ff1a40" stop-opacity="0" />
+            </linearGradient>
+            <filter id="crossGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+          <!-- Ambient Glow Behind Drop -->
+          <circle cx="130" cy="180" r="105" fill="url(#dropAura)" />
+          <!-- Back Orbital Ring -->
+          <ellipse cx="130" cy="185" rx="115" ry="42" transform="rotate(-24 130 185)" fill="none" stroke="url(#ringGrad2)" stroke-width="1.8" stroke-dasharray="160 80" />
+          <!-- Main 3D Glass Drop Body -->
+          <path d="M 130 35 C 130 35 210 135 210 195 C 210 240 174 275 130 275 C 86 275 50 240 50 195 C 50 135 130 35 130 35 Z" fill="url(#dropFluid)" stroke="url(#specularRim)" stroke-width="2.5" />
+          <!-- Internal Liquid Depth Contour -->
+          <path d="M 130 55 C 130 55 198 142 198 195 C 198 232 168 262 130 262 C 92 262 62 232 62 195 C 62 142 130 55 130 55 Z" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.2" />
+          <!-- Center Glowing Medical Cross -->
+          <g filter="url(#crossGlow)">
+            <path d="M 121 162 H 139 V 178 H 155 V 194 H 139 V 210 H 121 V 194 H 105 V 178 H 121 Z" fill="#ffffff" />
+          </g>
+          <!-- Glass Specular Highlight Curve (Upper Left) -->
+          <path d="M 128 50 C 128 50 82 125 78 175 C 75 210 92 235 92 235 C 92 235 76 200 80 170 C 85 130 126 54 128 50 Z" fill="url(#glassGloss)" opacity="0.85" />
+          <!-- Glass Top Specular Dot -->
+          <circle cx="130" cy="42" r="3" fill="#ffffff" opacity="0.9" />
+          <!-- Front Orbital Ring -->
+          <ellipse cx="130" cy="185" rx="122" ry="38" transform="rotate(32 130 185)" fill="none" stroke="url(#ringGrad1)" stroke-width="2" />
+          <!-- Orbital Light Sparkle Nodes -->
+          <circle cx="218" cy="154" r="3.5" fill="#ffffff" filter="url(#crossGlow)" />
+          <circle cx="44" cy="212" r="2.5" fill="#ff758c" />
+        </svg>
+      </div>
+
+      <!-- Center Column: EKG Badge, Headline, Subtext, Action Buttons -->
+      <div class="hero-center-col">
+        <!-- EKG Pulse Pill -->
+        <div class="hero-ekg-pill">
+          <svg class="hero-ekg-svg" viewBox="0 0 32 14">
+            <path d="M 0 7 H 7 L 10 1 L 13 13 L 17 3 L 20 10 L 23 7 H 32" />
+          </svg>
+          Blood Donation. A Stronger Tomorrow.
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="hero-headline">
+          Find blood. Give blood.<br>
+          <span class="hero-glow-title">Save lives.</span>
+        </h1>
+
+        <!-- Subtext Description -->
+        <p class="hero-subtext">
+          BloodLink connects Hospital Staff, Administrators, Donors, and Patients in one secure Philippine healthcare platform. Real-time inventory tracking, verified donor screening, and cold-chain compliance.
+        </p>
+
+        <!-- 3 Action Pills -->
+        <div class="hero-actions-row">
+          <a href="login.php" class="btn-hero-primary">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+            Access Official Portal
+          </a>
+          <button type="button" onclick="openMapModal('search')" class="btn-hero-glass">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            Search Blood Inventory
+          </button>
+          <button type="button" onclick="openMapModal('map')" class="btn-hero-glass">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+            Live Philippines Map
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Stylized Philippines Constellation Network Map -->
+      <div class="hero-visual-right">
+        <svg viewBox="0 0 260 340" class="ph-constellation-container">
+          <defs>
+            <radialGradient id="beaconGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ff3355" stop-opacity="1" />
+              <stop offset="40%" stop-color="#ff3355" stop-opacity="0.4" />
+              <stop offset="100%" stop-color="#ff3355" stop-opacity="0" />
+            </radialGradient>
+            <filter id="starGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          <!-- Interconnecting Network Lines -->
+          <g stroke="#ff3355" stroke-opacity="0.32" stroke-width="1.2" stroke-dasharray="2 3">
+            <!-- Luzon lines -->
+            <line x1="130" y1="52" x2="162" y2="78" />
+            <line x1="162" y1="78" x2="152" y2="98" />
+            <line x1="152" y1="98" x2="124" y2="114" />
+            <line x1="124" y1="114" x2="116" y2="138" />
+            <line x1="116" y1="138" x2="132" y2="162" />
+            <line x1="132" y1="162" x2="158" y2="178" />
+
+            <!-- Palawan line -->
+            <line x1="116" y1="138" x2="74" y2="202" />
+            <line x1="74" y1="202" x2="52" y2="236" />
+
+            <!-- Visayas lines -->
+            <line x1="132" y1="162" x2="148" y2="198" />
+            <line x1="148" y1="198" x2="174" y2="204" />
+            <line x1="174" y1="204" x2="188" y2="188" />
+            <line x1="148" y1="198" x2="138" y2="218" />
+
+            <!-- Mindanao lines -->
+            <line x1="174" y1="204" x2="176" y2="252" />
+            <line x1="176" y1="252" x2="152" y2="260" />
+            <line x1="152" y1="260" x2="114" y2="284" />
+            <line x1="176" y1="252" x2="188" y2="294" />
+            <line x1="188" y1="294" x2="168" y2="318" />
+            <line x1="152" y1="260" x2="168" y2="318" />
+          </g>
+
+          <!-- Constellation Cluster Nodes (Philippines Archipelago) -->
+          <!-- Luzon -->
+          <circle cx="130" cy="52" r="3" fill="#ff758c" />
+          <!-- San Mariano District Hospital (Center Beacon) -->
+          <circle cx="162" cy="78" r="16" fill="url(#beaconGlow)">
+            <animate attributeName="r" values="8;22;8" dur="3s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.8;0.1;0.8" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="162" cy="78" r="4.5" fill="#ffffff" filter="url(#starGlow)" />
+          <circle cx="152" cy="98" r="3" fill="#ff4d6d" />
+          <circle cx="124" cy="114" r="3.2" fill="#ff758c" />
+          <circle cx="116" cy="138" r="3.8" fill="#ffffff" filter="url(#starGlow)" />
+          <circle cx="132" cy="162" r="3" fill="#ff4d6d" />
+          <circle cx="158" cy="178" r="3.2" fill="#ff758c" />
+
+          <!-- Palawan -->
+          <circle cx="74" cy="202" r="2.8" fill="#ff4d6d" />
+          <circle cx="52" cy="236" r="3" fill="#ff758c" />
+
+          <!-- Visayas -->
+          <circle cx="148" cy="198" r="3.5" fill="#ffffff" filter="url(#starGlow)" />
+          <circle cx="174" cy="204" r="4" fill="#ffffff" filter="url(#starGlow)" />
+          <circle cx="188" cy="188" r="2.8" fill="#ff758c" />
+          <circle cx="138" cy="218" r="2.8" fill="#ff4d6d" />
+
+          <!-- Mindanao -->
+          <circle cx="176" cy="252" r="3.5" fill="#ff4d6d" />
+          <circle cx="152" cy="260" r="3.8" fill="#ffffff" filter="url(#starGlow)" />
+          <circle cx="114" cy="284" r="3" fill="#ff758c" />
+          <circle cx="188" cy="294" r="4" fill="#ffffff" filter="url(#starGlow)" />
+          <circle cx="168" cy="318" r="3.2" fill="#ff4d6d" />
+
+          <!-- Faint Background Star Dust -->
+          <circle cx="198" cy="64" r="1.5" fill="#ffffff" opacity="0.5" />
+          <circle cx="182" cy="132" r="1.5" fill="#ffffff" opacity="0.6" />
+          <circle cx="94" cy="88" r="1.5" fill="#ffffff" opacity="0.4" />
+          <circle cx="98" cy="274" r="1.5" fill="#ffffff" opacity="0.5" />
+          <circle cx="214" cy="242" r="1.5" fill="#ffffff" opacity="0.6" />
+        </svg>
+      </div>
     </div>
 
-    <!-- Official Portal Access Selection Grid -->
-    <div class="portal-cards-grid">
-      <a href="login.php?role=staff" class="portal-card">
-        <div>
-          <div class="portal-card-header">
-            <span class="portal-card-icon">🩺</span>
-            <span class="portal-card-badge staff">Staff Access</span>
-          </div>
-          <h3>Hospital Staff Portal</h3>
-          <p>Process urgent patient blood requests, screen incoming donors, record vitals, and release verified blood packs.</p>
+    <!-- Floating Glass Card for Blood Donors & Patients -->
+    <div class="hero-donor-card">
+      <div class="hero-donor-left">
+        <div class="hero-blood-bag-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <rect x="5" y="4" width="14" height="17" rx="3" fill="#ff1a40" fill-opacity="0.3" stroke="#ff3355" stroke-width="1.8"></rect>
+            <circle cx="12" cy="13" r="3.5" fill="#ffffff" />
+            <path d="M12 2v2M9 4h6" stroke="#ff3355" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
         </div>
-        <div class="portal-card-action">
-          Log in as Hospital Staff &rarr;
-        </div>
-      </a>
-
-      <a href="login.php?role=admin" class="portal-card">
-        <div>
-          <div class="portal-card-header">
-            <span class="portal-card-icon">🏥</span>
-            <span class="portal-card-badge admin">Management</span>
-          </div>
-          <h3>Hospital Administrator</h3>
-          <p>Supervise facility inventory on hand, manage official staff accounts, review shift reports, and audit cold-chain compliance.</p>
-        </div>
-        <div class="portal-card-action">
-          Log in as Hospital Admin &rarr;
-        </div>
-      </a>
-
-      <a href="login.php?role=superadmin" class="portal-card">
-        <div>
-          <div class="portal-card-header">
-            <span class="portal-card-icon">🛡️</span>
-            <span class="portal-card-badge superadmin">Governance</span>
-          </div>
-          <h3>System Super Administrator</h3>
-          <p>Multi-hospital network governance, master user roster, role permission matrices, system settings, and complete audit trails.</p>
-        </div>
-        <div class="portal-card-action">
-          Log in as Super Admin &rarr;
-        </div>
-      </a>
-    </div>
-
-    <!-- Mobile App Exclusive Notice for Donors & Patients -->
-    <div style="margin:24px auto 0; max-width:760px; width:100%; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.22); backdrop-filter:blur(10px); border-radius:14px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; text-align:left;">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <span style="font-size:30px;">📱</span>
-        <div>
-          <b style="font-size:14px; color:#fff; display:block;">Blood Donors &amp; Patients</b>
-          <span style="font-size:12px; color:rgba(255,255,255,0.88);">Blood donation appointments and patient requests are handled exclusively through the official BloodLink Android App.</span>
+        <div class="hero-donor-info">
+          <h4>Blood Donors &amp; Patients</h4>
+          <p>Step into a safer, more connected healthcare community. Donate or request blood with just a few clicks.</p>
         </div>
       </div>
       <div>
-        <a href="download.php" target="_blank" class="btn slim white" style="font-size:12.5px; padding:8px 18px; font-weight:800; text-decoration:none; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-          ⬇️ Download Android App (v1.0)
+        <a href="download.php" target="_blank" class="btn-app-download">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download Android App (v1.0) &rsaquo;
         </a>
       </div>
+    </div>
+
+    <!-- Bottom Trust Bar -->
+    <div class="hero-trust-bar">
+      <span class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        Secure &amp; Encrypted
+      </span>
+      <span>&bull;</span>
+      <span class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        Partnered with PH Hospitals
+      </span>
+      <span>&bull;</span>
+      <span class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        For a Healthier Philippines
+      </span>
     </div>
   </div>
 </div>
