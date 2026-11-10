@@ -847,9 +847,7 @@ if ($action === 'book_donation') {
         // Cooldown check (56 days) - strictly for COMPLETED donations only!
         $lastDonation = null;
         if ($donorId) {
-            $cooldownStmt = $pdo->prepare("SELECT id, donation_date, created_at, reference_code,
-                DATEDIFF(CURDATE(), LEAST(donation_date, CURDATE())) AS days_passed,
-                TIMESTAMPDIFF(SECOND, created_at, NOW()) AS sec_passed
+            $cooldownStmt = $pdo->prepare("SELECT id, donation_date, created_at, reference_code
                 FROM donations WHERE donor_id = ? AND status = 'Completed' ORDER BY donation_date DESC, id DESC LIMIT 1");
             $cooldownStmt->execute([$donorId]);
             $lastDonation = $cooldownStmt->fetch(PDO::FETCH_ASSOC);
@@ -857,10 +855,14 @@ if ($action === 'book_donation') {
 
         $COOLDOWN_DAYS = 90; // 3 months donation interval
         if ($lastDonation) {
-            $daysPassed = max(0, (int) ($lastDonation['days_passed'] ?? 0));
+            $donationTs = !empty($lastDonation['donation_date']) ? strtotime($lastDonation['donation_date']) : time();
+            $createdTs = !empty($lastDonation['created_at']) ? strtotime($lastDonation['created_at']) : $donationTs;
+            $nowTs = time();
+            $effectiveDate = min($donationTs, $nowTs);
+            $daysPassed = max(0, (int) floor(($nowTs - $effectiveDate) / 86400));
+            $secPassed = max(0, $nowTs - $createdTs);
             if ($daysPassed < $COOLDOWN_DAYS) {
                 $daysRemaining = $COOLDOWN_DAYS - $daysPassed;
-                $effectiveDate = min(strtotime($lastDonation['donation_date']), time());
                 $nextDate = date('F j, Y', strtotime("+{$COOLDOWN_DAYS} days", $effectiveDate));
                 $secRemaining = max(0, $daysRemaining * 86400);
 
@@ -928,21 +930,23 @@ if ($action === 'donor_cooldown' || $action === 'donor_status') {
     $nextDate = '';
 
     if ($donorId) {
-        $stmt = $pdo->prepare("SELECT id, donation_date, created_at, reference_code,
-            DATEDIFF(CURDATE(), LEAST(donation_date, CURDATE())) AS days_passed,
-            TIMESTAMPDIFF(SECOND, created_at, NOW()) AS sec_passed
+        $stmt = $pdo->prepare("SELECT id, donation_date, created_at, reference_code
             FROM donations WHERE donor_id = ? AND status = 'Completed' ORDER BY donation_date DESC, id DESC LIMIT 1");
         $stmt->execute([$donorId]);
         $lastDonation = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($lastDonation) {
-            $daysPassed = max(0, (int) ($lastDonation['days_passed'] ?? 0));
+            $donationTs = !empty($lastDonation['donation_date']) ? strtotime($lastDonation['donation_date']) : time();
+            $createdTs = !empty($lastDonation['created_at']) ? strtotime($lastDonation['created_at']) : $donationTs;
+            $nowTs = time();
+            $effectiveDate = min($donationTs, $nowTs);
+            $daysPassed = max(0, (int) floor(($nowTs - $effectiveDate) / 86400));
+            $secPassed = max(0, $nowTs - $createdTs);
             if ($daysPassed < $COOLDOWN_DAYS) {
                 $inCooldown = true;
                 $daysRemaining = $COOLDOWN_DAYS - $daysPassed;
-                $effectiveDate = min(strtotime($lastDonation['donation_date']), time());
                 $nextDate = date('F j, Y', strtotime("+{$COOLDOWN_DAYS} days", $effectiveDate));
-                $secRem = ($COOLDOWN_DAYS * 86400) - max(0, (int)$lastDonation['sec_passed']);
+                $secRem = ($COOLDOWN_DAYS * 86400) - $secPassed;
                 $cooldownSec = max(0, $secRem);
             }
         }
@@ -1224,10 +1228,11 @@ if ($method === 'POST') {
             exit;
         }
 
-        $recentStmt = $pdo->prepare("SELECT TIMESTAMPDIFF(SECOND, created_at, NOW()) as sec_diff FROM blood_requests WHERE patient_id = ? ORDER BY created_at DESC LIMIT 1");
+        $recentStmt = $pdo->prepare("SELECT created_at FROM blood_requests WHERE patient_id = ? ORDER BY created_at DESC LIMIT 1");
         $recentStmt->execute([$patientId]);
-        $secDiff = $recentStmt->fetchColumn();
-        if ($secDiff !== false && $secDiff !== null && (int)$secDiff < 30) {
+        $recentRow = $recentStmt->fetch(PDO::FETCH_ASSOC);
+        $secDiff = ($recentRow && !empty($recentRow['created_at'])) ? (time() - strtotime($recentRow['created_at'])) : null;
+        if ($secDiff !== null && $secDiff >= 0 && $secDiff < 30) {
             $remaining = 30 - (int)$secDiff;
             http_response_code(429);
             echo json_encode([
