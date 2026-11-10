@@ -815,7 +815,7 @@ if ($action === 'requests') {
         /* ---- Approved / Processing ---- */
         if ($newStatus === 'Approved' || $newStatus === 'Processing') {
             // Admin, superadmin, and staff are authorized to approve blood requests
-            if (!in_array((string) $request['status'], ['Pending', 'Processing'], true)) {
+            if (!in_array((string) $request['status'], ['Pending', 'Processing', 'Verified', 'Needs Correction'], true)) {
                 jsonResponse(['ok' => false,
                     'message' => 'Cannot move a request from "' . $request['status'] . '" to "' . $newStatus . '".'], 400);
             }
@@ -872,11 +872,12 @@ if ($action === 'requests') {
                          WHERE group_id = ? AND id != ? AND status IN ('Pending', 'Processing')"
                     )->execute([$approvingHospName, $siblingReason, $request['group_id'], $request['id']]);
                 } else {
+                    $since24h = date('Y-m-d H:i:s', strtotime('-24 hours'));
                     $database->prepare(
                         "UPDATE blood_requests 
                          SET status = 'Cancelled', approved_by_hospital = ?, rejection_reason = ? 
-                         WHERE patient_id = ? AND blood_type = ? AND units_needed = ? AND id != ? AND status IN ('Pending', 'Processing') AND created_at >= NOW() - INTERVAL '24 HOUR'"
-                    )->execute([$approvingHospName, $siblingReason, $request['patient_id'], $type, $units, $request['id']]);
+                         WHERE patient_id = ? AND blood_type = ? AND units_needed = ? AND id != ? AND status IN ('Pending', 'Processing') AND created_at >= ?"
+                    )->execute([$approvingHospName, $siblingReason, $request['patient_id'], $type, $units, $request['id'], $since24h]);
                 }
 
                 $database->commit();

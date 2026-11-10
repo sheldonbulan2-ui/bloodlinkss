@@ -4,6 +4,21 @@
  * ---------------------------------------------------
  * Bridges the Android App with the Web Portal locally.
  */
+ini_set('display_errors', '0');
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+register_shutdown_function(function() {
+    $err = error_get_last();
+    if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        if (!headers_sent()) {
+            http_response_code(500);
+            header("Content-Type: application/json; charset=UTF-8");
+        }
+        if (ob_get_length()) ob_clean();
+        echo json_encode(["success" => false, "message" => "Server temporarily unavailable: " . $err['message']]);
+    }
+});
+ob_start();
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");

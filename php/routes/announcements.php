@@ -17,10 +17,12 @@ $first = strtolower($segments[1] ?? '');
  * ============================================================= */
 if ($first === '' && $method === 'GET') {
     $db = db();
+    $isPg = ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'pgsql');
+    $dateExpr = $isPg ? "TO_CHAR(a.created_at, 'Mon DD, YYYY HH12:MI AM')" : "DATE_FORMAT(a.created_at, '%b %d, %Y %h:%i %p')";
 
     if ($role === 'superadmin') {
         $stmt = $db->query(
-            "SELECT a.*, DATE_FORMAT(a.created_at, '%b %d, %Y %h:%i %p') AS formatted_date
+            "SELECT a.*, $dateExpr AS formatted_date
              FROM announcements a
              ORDER BY a.is_urgent DESC, a.id DESC
              LIMIT 100"
@@ -29,7 +31,7 @@ if ($first === '' && $method === 'GET') {
     } elseif (in_array($role, ['staff', 'admin'], true)) {
         $hospId = (int) ($user['hospital_id'] ?? 0);
         $stmt = $db->prepare(
-            "SELECT a.*, DATE_FORMAT(a.created_at, '%b %d, %Y %h:%i %p') AS formatted_date
+            "SELECT a.*, $dateExpr AS formatted_date
              FROM announcements a
              WHERE a.hospital_id = ? OR a.hospital_id IS NULL OR a.hospital_id = 0
              ORDER BY a.is_urgent DESC, a.id DESC
@@ -44,7 +46,7 @@ if ($first === '' && $method === 'GET') {
         
         $sql = "SELECT a.id, a.title, a.message, a.category, a.target_audience, a.is_urgent,
                        a.hospital_name, a.created_by_name,
-                       DATE_FORMAT(a.created_at, '%b %d, %Y %h:%i %p') AS formatted_date
+                       $dateExpr AS formatted_date
                 FROM announcements a
                 WHERE a.status = 'active'
                   AND a.target_audience IN ($placeholders)
@@ -54,6 +56,14 @@ if ($first === '' && $method === 'GET') {
         $stmt->execute($targetFilter);
         $announcements = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Ensure formatted_date is never empty
+    foreach ($announcements as &$ann) {
+        if (empty($ann['formatted_date']) && !empty($ann['created_at'])) {
+            $ann['formatted_date'] = date('M d, Y h:i A', strtotime((string)$ann['created_at']));
+        }
+    }
+    unset($ann);
 
     jsonResponse(['ok' => true, 'announcements' => $announcements]);
 }
@@ -92,19 +102,32 @@ if ($first === '' && $method === 'POST') {
         }
     }
 
-    // Get author display name
+    // Get author display name safely
     $authorName = $user['username'] ?? 'Staff';
-    $pStmt = $db->prepare("SELECT first_name, last_name FROM profiles WHERE user_id = ? LIMIT 1");
-    $pStmt->execute([(int) $user['id']]);
-    $prof = $pStmt->fetch(PDO::FETCH_ASSOC);
-    if ($prof && (!empty($prof['first_name']) || !empty($prof['last_name']))) {
-        $authorName = trim(($prof['first_name'] ?? '') . ' ' . ($prof['last_name'] ?? ''));
+    try {
+        $pStmt = $db->prepare("SELECT first_name, last_name FROM profiles WHERE user_id = ? LIMIT 1");
+        $pStmt->execute([(int) $user['id']]);
+        $prof = $pStmt->fetch(PDO::FETCH_ASSOC);
+        if ($prof && (!empty($prof['first_name']) || !empty($prof['last_name']))) {
+            $authorName = trim(($prof['first_name'] ?? '') . ' ' . ($prof['last_name'] ?? ''));
+        }
+    } catch (Throwable $pe) {
+        // Fallback for setups without separate profiles table
+        try {
+            $uStmt = $db->prepare("SELECT username FROM users WHERE id = ? LIMIT 1");
+            $uStmt->execute([(int) $user['id']]);
+            $uRow = $uStmt->fetch(PDO::FETCH_ASSOC);
+            if ($uRow && !empty($uRow['username'])) {
+                $authorName = (string)$uRow['username'];
+            }
+        } catch (Throwable $ue) {}
     }
 
+    $nowStr = date('Y-m-d H:i:s');
     // Insert into announcements
     $ins = $db->prepare(
         "INSERT INTO announcements (title, message, category, target_audience, is_urgent, hospital_id, hospital_name, created_by, created_by_name, status, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', NOW())"
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)"
     );
     $ins->execute([
         $title,
@@ -115,7 +138,8 @@ if ($first === '' && $method === 'POST') {
         $hospId,
         $hospName,
         (int) $user['id'],
-        $authorName
+        $authorName,
+        $nowStr
     ]);
     $announcementId = (int) $db->lastInsertId();
 

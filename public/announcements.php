@@ -283,7 +283,13 @@
             <textarea id="f-message" placeholder="Provide complete details including required blood types, dates, hospital department, contact guidelines, etc..." required></textarea>
           </div>
 
-          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+          <div style="margin-top:10px;">
+            <label for="f-file">Attachment / Image Poster (Optional)</label>
+            <input type="file" id="f-file" accept="image/png,image/jpeg,image/webp,application/pdf" style="font-size:12px; border:1px dashed #cbd5e1; padding:8px; border-radius:8px; width:100%; background:#f8fafc;">
+            <small style="display:block; color:#6b7280; font-size:11.5px; margin-top:2px;">Attach a blood drive banner, flyer, or official advisory memo (optional).</small>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:12px;">
             <button type="button" class="btn ghost" id="btn-cancel-modal">Cancel</button>
             <button type="submit" class="btn" id="btn-submit-ann" style="background:#c0152e; color:#fff; font-weight:700;">
               🚀 Publish &amp; Broadcast
@@ -442,9 +448,31 @@
     try {
       btn.disabled = true;
       btn.textContent = 'Broadcasting...';
+
+      let finalMessage = message;
+      const fileInput = document.getElementById('f-file');
+      if (fileInput && fileInput.files && fileInput.files.length > 0) {
+        btn.textContent = 'Uploading attachment...';
+        const fd = new FormData();
+        fd.append('file', fileInput.files[0]);
+        try {
+          const uploadRes = await fetch(UI.url('/api/upload.php'), {
+            method: 'POST',
+            body: fd
+          });
+          const uploadJson = await uploadRes.json();
+          if (uploadJson && uploadJson.success && uploadJson.file_url) {
+            finalMessage += '\n\n📎 Official Flyer / Attachment: ' + uploadJson.file_url;
+          }
+        } catch (uploadErr) {
+          console.warn('Attachment upload failed:', uploadErr);
+        }
+      }
+
+      btn.textContent = 'Broadcasting...';
       const res = await API.post('/api/announcements', {
         title,
-        message,
+        message: finalMessage,
         category,
         target_audience,
         is_urgent,
